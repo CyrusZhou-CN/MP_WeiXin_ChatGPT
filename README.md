@@ -26,8 +26,9 @@
    OPENAI_MODEL=gpt-3.5-turbo
    ```
 
-4. 将以上配置参数中的 `your_app_id`、`your_app_secret`、`your_token`、`your_encoding_aes_key` 和 `your_openai_api_key` 分别替换为通过公众号开发者平台获取的实际参数值。
-
+4. 将以上配置参数中的 `your_app_id`、`your_app_secret`、`your_token`、`your_encoding_aes_key` 和 `your_openai_api_key` 分别替换为通过[公众号开发者平台](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)获取的实际参数值和。[OpenAI API Key](https://platform.openai.com/account/api-keys);
+![公众平台调试接口](./public/images/weixin.jpg)
+注意：在微信公众号管理后台中，URL 的地址是以您的服务器地址为开头的完整地址，如 http://yourdomain.com/api/wechat
 ## 调试运行
 
 1. 在项目根目录执行以下命令，安装依赖包。
@@ -75,6 +76,3 @@
 6. 提交配置并启用服务。
 
 7. 访问微信公众号，开始使用程序。
-## 公众平台调试接口申请地址
-https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login
-![公众平台调试接口](./public/images/weixin.jpg)

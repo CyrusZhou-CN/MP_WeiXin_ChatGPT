@@ -3,17 +3,19 @@ import path from "path"
 import matter from "gray-matter"
 import { remark } from "remark"
 import html from "remark-html"
-
-const Home = ({ contentHtml, title }) => {
+import { GetStaticProps } from 'next'
+type Props = {
+  contentHtml: string
+}
+const Home: React.FC<Props> = ({ contentHtml }) => {
   return (
     <div>
-      <h1>{title}</h1>
       <div dangerouslySetInnerHTML={{ __html: contentHtml }}></div>
     </div>
   )
 }
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const fullPath = path.join(process.cwd(), "readme.md")
   const fileContents = fs.readFileSync(fullPath, "utf8")
 
@@ -28,7 +30,6 @@ export async function getStaticProps() {
   return {
     props: {
       contentHtml,
-      title: matterResult.data.title||null
     }
   }
 }
