@@ -15,4 +15,15 @@ export interface Message {
     img: string;
     url: string;
   }
+  export interface XmlMessage {
+    event?: string;
+    tousername: string,
+    fromusername: string,
+    createtime: number,
+    msgtype: string,
+    content: string,
+    msgid: string,
+    eventkey: string,
+    encrypt: string,
+  }
   

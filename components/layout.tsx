@@ -4,8 +4,8 @@ import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 
-const name = '[Your Name]'
-export const siteTitle = 'Next.js Sample Website'
+const name = '微信公众号 ChatGpt 俩天机器人'
+export const siteTitle = 'Next.js 微信公众号 ChatGpt 俩天机器人'
 
 export default function Layout({
   children,
@@ -34,28 +34,10 @@ export default function Layout({
       <header className={styles.header}>
         {home ? (
           <>
-            <Image
-              priority
-              src="/images/profile.jpg"
-              className={utilStyles.borderCircle}
-              height={144}
-              width={144}
-              alt={name}
-            />
             <h1 className={utilStyles.heading2Xl}>{name}</h1>
           </>
         ) : (
           <>
-            <Link href="/">
-              <Image
-                priority
-                src="/images/profile.jpg"
-                className={utilStyles.borderCircle}
-                height={108}
-                width={108}
-                alt={name}
-              />
-            </Link>
             <h2 className={utilStyles.headingLg}>
               <Link href="/" className={utilStyles.colorInherit}>
                 {name}
@@ -65,11 +47,6 @@ export default function Layout({
         )}
       </header>
       <main>{children}</main>
-      {!home && (
-        <div className={styles.backToHome}>
-          <Link href="/">← Back to home</Link>
-        </div>
-      )}
     </div>
   )
 }

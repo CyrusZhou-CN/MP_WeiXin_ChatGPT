@@ -1,5 +1,4 @@
 import { Message } from "./message"; // 假设 message 模块中定义了 Message 类型
-
 // 回复文本消息
 export function textMessage(message: Message): string {
   const createTime = new Date().getTime();

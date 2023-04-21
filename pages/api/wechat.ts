@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import openai from "../../components/openai"
+import aichat from "../../components/aichat"
 import validateToken from "../../components/validateToken"
 import { Cache } from "memory-cache"
-import { Message } from "../../components/message"
+import { Message ,XmlMessage } from "../../components/message"
 import { textMessage } from "../../components/template"
+import sysconfig from '../../components/sysconfig'
+import { DOMParser } from 'xmldom'
 
 const REPLY_CACHE_DURATION = 20000;
 const REPLY_CACHE_MAX_ATTEMPTS = 3;
@@ -14,59 +16,86 @@ interface ReplyCache {
 }
 const replyCache = new Cache();
 
-async function handleTextMessage(xml: any, res: NextApiResponse): Promise<void> {
-  const key = "__express__" + xml.msgid[0];
+async function handleTextMessage(xml: any,res: NextApiResponse): Promise<void> {
+  if (!xml || !xml.msgid || !xml.fromusername || !xml.tousername || !xml.content) {
+    console.log('Invalid XML object:', xml); // 输出无效的XML对象
+    return;
+  }
+  const key = "__express__" + xml.msgid;
+
   const replyObj = replyCache.get(key) as ReplyCache | undefined;
   const timestamp = Date.now();
 
   if (replyObj?.count && timestamp - replyObj.timestamp < REPLY_CACHE_DURATION) {
     if (replyObj.count >= REPLY_CACHE_MAX_ATTEMPTS) {
-      const message: Message = { FromUserName: xml.fromusername[0], ToUserName: xml.tousername[0], reply: "答案太长，超时了，请重新提问" };
+      const message: Message = { FromUserName: xml.fromusername, ToUserName: xml.tousername, reply: sysconfig.contentTooLong };
       res.send(textMessage(message));
       return;
     }
     replyCache.put(key, { count: replyObj.count + 1, reply: replyObj.reply, timestamp }, REPLY_CACHE_DURATION);
+    res.send(replyObj.reply);
     return;
-  }
+  }  
 
-  const reply = await openai.getReply(xml.content[0]);
-  const message: Message = { FromUserName: xml.fromusername[0], ToUserName: xml.tousername[0], reply };
+  const reply = await aichat.getReply(xml.fromusername,xml.content);
+  console.log(reply);
+  const message: Message = { FromUserName: xml.fromusername, ToUserName: xml.tousername, reply };
   replyCache.put(key, { count: 1, reply: textMessage(message), timestamp }, REPLY_CACHE_DURATION);
   res.send(textMessage(message));
 }
 
 async function handleSubscribeEvent(xml: any, res: NextApiResponse): Promise<void> {
-  const message: Message = { FromUserName: xml.fromusername[0], ToUserName: xml.tousername[0], reply: "欢迎关注，可直接向ChatGPT提问" };
-  res.send(textMessage(message));
+  const message: Message = { FromUserName: xml.fromusername, ToUserName: xml.tousername, reply: sysconfig.subscribeReply };
+  res.send(textMessage(message).toString());
 }
-
-export default async (req: NextApiRequest, res: NextApiResponse) => {  
+export default async (req: NextApiRequest, res: NextApiResponse) => { 
   const { method } = req;
   let result;
   try {
-    result= await validateToken(req);    
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(`Internal Server Error: ${error.message}`);
-    return;
+    result= await validateToken(req);   
+    console.info(result); 
+  } catch (error: any) {
+    console.error(error.message);
   }
   switch (method) {
     case 'GET':
-      res.status(200).json(result);
+      res.send(result);
       break;
     case 'POST':
-      const xml = req.body;
-      const msgType = xml.msgtype[0];
+      console.log(typeof req.body); // 应该输出 "object"
+      console.log(req.body); 
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(req.body, "text/xml");
+      let xml: XmlMessage = {
+        tousername: xmlDoc.getElementsByTagName('ToUserName')[0]?.textContent || '',
+        fromusername: xmlDoc.getElementsByTagName('FromUserName')[0]?.textContent || '',
+        createtime: parseInt(xmlDoc.getElementsByTagName('CreateTime')[0]?.textContent || '0', 10),
+        msgtype: xmlDoc.getElementsByTagName('MsgType')[0]?.textContent || '',
+        content: xmlDoc.getElementsByTagName('Content')[0]?.textContent || '',
+        msgid: xmlDoc.getElementsByTagName('MsgId')[0]?.textContent || '',
+        event: xmlDoc.getElementsByTagName('Event')[0]?.textContent || '',
+        eventkey: xmlDoc.getElementsByTagName('EventKey')[0]?.textContent || '',
+        encrypt: xmlDoc.getElementsByTagName('Encrypt')[0]?.textContent || '',
+      };
+      // if(xml.encrypt){
+      //   console.log(typeof xml); // 应该输出 "object"
+      //   console.log(xml); // 应该输出您提供的 XML 数据对象
+      // }
+      const msgType = xml.msgtype;
       switch (msgType) {
         case "text":
-          await handleTextMessage(xml, res);
+          await handleTextMessage(xml,res);
           break;
         case "event":
-          if (xml.event && xml.event[0] === "subscribe") {
-            await handleSubscribeEvent(xml, res);
-          } else {
-            res.send("");
-          }
+            switch (xml.event) {
+              case "subscribe":
+                await handleSubscribeEvent(xml, res);
+                break;
+              case "unsubscribe":
+              default:
+                res.send("");
+                break;
+            }
           break;
         default:
           res.send("");
@@ -75,7 +104,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break;
     default:
       res.setHeader('Allow', ['GET', 'POST']);
-      res.status(405).json(`Method ${method} Not Allowed`);
+      res.status(405).end(`Method ${method} Not Allowed`);
       break;
   }
 };
