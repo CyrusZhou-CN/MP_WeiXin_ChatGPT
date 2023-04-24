@@ -9,7 +9,7 @@ const configuration = new Configuration({
   apiKey: sysconfig.openaiApiKey
 });
 const openai = new OpenAIApi(configuration);
-const getReply = async (user:string,text: string): Promise<string> => {
+const getReply = async (text: string): Promise<string> => {
   try {
     const messages:Array<ChatCompletionRequestMessage> = [{
       role: ChatCompletionRequestMessageRoleEnum.Assistant,
@@ -21,9 +21,10 @@ const getReply = async (user:string,text: string): Promise<string> => {
       temperature: 1,
       max_tokens: 2000,
       presence_penalty: 0,
+      stream: false, // 设置OpenAI API的stream选项
     },{
-      timeout: 9000,
-      timeoutErrorMessage: '提问超时，请简化你的问题,请重试',
+      timeout: sysconfig.openaiTimeout,
+      timeoutErrorMessage: '提问超时，可能服务器正忙，请稍后重试',
       headers: {
         "Content-Encoding": "gzip",
         "Content-Type": "application/json",

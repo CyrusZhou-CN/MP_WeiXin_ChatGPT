@@ -1,6 +1,5 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
-
 module.exports = {
   webpack: (config, { isServer }) => {
     if (isServer) {

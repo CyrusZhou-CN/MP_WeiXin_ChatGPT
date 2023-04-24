@@ -1,5 +1,6 @@
+import { NextApiRequest } from "next";
 import {genSignature} from "./wxcrypt";
-function validateToken(req:any) {
+function validateToken(req:NextApiRequest) {
   return new Promise((resolve, reject) => {
     // 获取微信服务器发送的数据
     const { signature, timestamp, nonce, echostr } = req.query;

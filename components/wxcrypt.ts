@@ -46,7 +46,7 @@ export class Pkcs7Decoder {
     return content.slice(0, content.byteLength - padSize);
   }
 };
-export const genSignature=(timestamp: string, nonce: string)=> {
+export const genSignature=(timestamp: string|string[]|undefined, nonce: string|string[]|undefined)=> {
   const sortedArr = [sysconfig.token, timestamp, nonce].sort().join("");
   // sha1加密
   const signature = sha1(sortedArr);
