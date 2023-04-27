@@ -26,3 +26,7 @@ yarn-error.log*
 .vercel
 pnpm-lock.yaml
 package-lock.json
+.next.zip
+.env.test
+.next.zip
+.env.prod

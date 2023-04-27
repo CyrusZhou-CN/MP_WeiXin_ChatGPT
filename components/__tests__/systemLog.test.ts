@@ -17,8 +17,8 @@ describe('SystemLog model', () => {
     await sequelize.close();
   });
 
-  it('can create a new record', async () => {
-    const newRecord = await SystemLog.createLog('info','User logged in');
+  it('can createLog a new record', async () => {
+    const newRecord = await SystemLog.createLog('111','222','info','User logged in');
 
     expect(newRecord).toMatchObject({
       id: expect.any(Number),
@@ -26,10 +26,19 @@ describe('SystemLog model', () => {
       level: 'info',
     });
   });
+  it('can Log a new record', async () => {
+    const newRecord = await SystemLog.Log('info','User logged in');
 
+    expect(newRecord).toMatchObject({
+      id: expect.any(Number),
+      message: 'User logged in',
+      level: 'info',
+    });
+  });
+  
   it('can read all records', async () => {
-    await SystemLog.createLog('info','User logged in');
-    await SystemLog.createLog('debug','User logged out');
+    await SystemLog.createLog('111','222','info','User logged in');
+    await SystemLog.createLog('111','222','debug','User logged out');
 
     const allRecords = await SystemLog.getLatestLogs();
 
@@ -37,7 +46,7 @@ describe('SystemLog model', () => {
   });
 
   it('can update an existing record', async () => {
-    const newRecord = await SystemLog.createLog('info','User logged in');
+    const newRecord = await SystemLog.createLog('111','222','info','User logged in');
 
     const updatedRecord = await newRecord.update({
       message: 'User logged out',
@@ -48,7 +57,7 @@ describe('SystemLog model', () => {
   });
 
   it('can delete an existing record', async () => {
-    const newRecord = await SystemLog.createLog('info','User logged in');
+    const newRecord = await SystemLog.createLog('111','222','info','User logged in');
 
     await newRecord.destroy();
 

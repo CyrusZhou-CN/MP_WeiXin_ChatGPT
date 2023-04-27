@@ -18,6 +18,22 @@ export default function (sequelize: Sequelize) {
       comment: undefined,
       field: "level"
     },
+    fromusername: {
+      type: DataTypes.STRING(64),
+      allowNull: true,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: undefined,
+      field: "fromusername"
+    },
+    tousername: {
+      type: DataTypes.STRING(64),
+      allowNull: true,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: undefined,
+      field: "tousername"
+    },
     message: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -51,6 +67,6 @@ export default function (sequelize: Sequelize) {
     comment: "",
     indexes: []
   };
-  const SystemLogModel = sequelize.define("system_log_model", attributes, options);
+  const SystemLogModel = sequelize.define("system_log", attributes, options);
   return SystemLogModel;
 }

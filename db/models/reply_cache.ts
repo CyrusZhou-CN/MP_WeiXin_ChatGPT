@@ -9,6 +9,22 @@ export default function (sequelize: Sequelize) {
       comment: undefined,
       field: "id"
     },
+    fromusername: {
+      type: DataTypes.STRING(64),
+      allowNull: true,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: undefined,
+      field: "fromusername"
+    },
+    tousername: {
+      type: DataTypes.STRING(64),
+      allowNull: true,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: undefined,
+      field: "tousername"
+    },
     msgId: {
       type: DataTypes.STRING(64),
       allowNull: false,
@@ -74,6 +90,6 @@ export default function (sequelize: Sequelize) {
     comment: "",
     indexes: []
   };
-  const ReplyCacheModel = sequelize.define("reply_cache_model", attributes, options);
+  const ReplyCacheModel = sequelize.define("reply_cache", attributes, options);
   return ReplyCacheModel;
 }

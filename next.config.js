@@ -1,7 +1,9 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
+require('dotenv').config();
 module.exports = {
   webpack: (config, { isServer }) => {
+
     if (isServer) {
       config.plugins.push(
         new CopyPlugin({

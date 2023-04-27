@@ -1,11 +1,10 @@
 // sequelize.ts
 import { Dialect, Sequelize } from 'sequelize';
 import sysconfig from '../components/sysconfig';
+import writeToFile from '../components/log';
 
 // 创建 Sequelize 实例并传递连接参数
 const dialect:Dialect=sysconfig.dbType as Dialect;
-
-console.log('dialect:',dialect);
 
 let sequelize = new Sequelize({
     host: sysconfig.dbHost,

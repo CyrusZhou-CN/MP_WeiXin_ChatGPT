@@ -1,5 +1,3 @@
-
-import dotenv from 'dotenv';
 interface SysConfig {
     openaiTimeout: number;
     appID: string;
@@ -18,8 +16,6 @@ interface SysConfig {
     dbDatabase: string;
     dbType: string;
   }
-
-dotenv.config();
 
 
 const sysconfig: SysConfig = {

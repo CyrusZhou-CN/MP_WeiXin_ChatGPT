@@ -1,6 +1,8 @@
 import { Model, BuildOptions } from 'sequelize';
 export interface IReplyCacheAttributes {
   id: number,
+  fromusername?: string,
+  tousername?: string,
   msgId: string,
   responseId: string,
   input: string,

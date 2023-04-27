@@ -19,6 +19,8 @@ describe('ReplyCache model', () => {
 
   it('can read all records', async () => {
     await ReplyCache.saveCache(
+      '11111',
+      '2222',
        '1',
       '1',
       'Record 1',
@@ -26,6 +28,8 @@ describe('ReplyCache model', () => {
       new Date()
     );
     await ReplyCache.saveCache(
+      '11111',
+      '2222',
       '2',
      '2',
      'Record 2',
@@ -39,6 +43,8 @@ describe('ReplyCache model', () => {
   
   it('can create a new record', async () => {
     await ReplyCache.saveCache(
+      '11111',
+      '2222',
       '1',
       '1',
       'Record 1',
@@ -46,7 +52,6 @@ describe('ReplyCache model', () => {
       new Date()
    );
     const newRecord = await ReplyCache.getCache(
-      '1',
       '1'
     );
     expect(newRecord.input).toBe('Record 1');
@@ -54,6 +59,8 @@ describe('ReplyCache model', () => {
 
   it('can update an existing record', async () => {
     const newRecord = await ReplyCache.saveCache('3',
+    '11111',
+    '2222',
     '3',
     'Record 3',
     null,
@@ -68,6 +75,8 @@ describe('ReplyCache model', () => {
 
   it('can delete an existing record', async () => {
     const newRecord = await ReplyCache.saveCache(
+      '11111',
+      '2222',
     '1',
     '1',
     'Record 1',

@@ -1,3 +1,4 @@
+import writeToFile from "./log";
 import sysconfig from "./sysconfig";
 import {
   ChatCompletionRequestMessage,
@@ -34,7 +35,7 @@ const getReply = async (text: string): Promise<string> => {
     const reply =  response.data.choices[0].message?.content.replace(/^\n+|\n+$/g, "")
     return reply || '没有找到答案，请问其他问题吧！';
   } catch (error: any) {
-    console.error(`Error: ${error}`);
+    writeToFile('error', error);
     return error.message || '没有找到答案，请问其他问题吧！';
   }
 };

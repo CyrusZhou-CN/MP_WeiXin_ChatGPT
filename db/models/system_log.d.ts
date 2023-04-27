@@ -2,6 +2,8 @@ import { Model, BuildOptions } from 'sequelize';
 export interface ISystemLogAttributes {
   id: number,
   level?: any,
+  fromusername?: string,
+  tousername?: string,
   message?: string,
   createdAt: Date,
   updatedAt: Date,

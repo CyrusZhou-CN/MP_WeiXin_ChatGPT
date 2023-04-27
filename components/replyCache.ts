@@ -1,12 +1,12 @@
 import {ReplyCacheModel} from '../db';
 
 export class ReplyCache {
-    getCache= (msgId: string, responseId: string)=> {
-        const catche = ReplyCacheModel.findOne({where:{msgId:msgId, responseId:responseId}});
+    getCache= (responseId: string)=> {
+        const catche = ReplyCacheModel.findOne({where:{responseId:responseId},order: [['createdAt', 'DESC']]});
         return catche;
     };
-    saveCache=(msgId: string, responseId: string, input: string|null, reply: string|null,expireAt: Date)=> {
-        const catche =  ReplyCacheModel.create({msgId:msgId, responseId:responseId, input:input, reply:reply,expireAt:expireAt});
+    saveCache=(fromusername: string,tousername: string,msgId: string, responseId: string, input: string|null, reply: string|null,expireAt: Date)=> {
+        const catche =  ReplyCacheModel.create({fromusername:fromusername,tousername:tousername,msgId:msgId, responseId:responseId, input:input, reply:reply,expireAt:expireAt});
         return catche;
     };
     findAll = () => ReplyCacheModel.findAll();
