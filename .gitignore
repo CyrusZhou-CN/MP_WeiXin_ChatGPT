@@ -30,3 +30,4 @@ package-lock.json
 .env.test
 .next.zip
 .env.prod
+.next.zip
