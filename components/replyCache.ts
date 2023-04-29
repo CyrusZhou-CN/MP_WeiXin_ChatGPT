@@ -3,11 +3,11 @@ import ReplyCacheModel from "../db/models/reply_cache";
 export class ReplyCache {
     
     getCacheForResponseId = (responseId: string) => {
-        const catche = ReplyCacheModel.findAll({ where: { responseId: responseId }, order: [['createdAt', 'DESC']] });
+        const catche = ReplyCacheModel.findOne({ where: { responseId: responseId }, order: [['id', 'ASC']] });
         return catche;
     };
     getCacheForMsgId = (msgId: string) => {
-        const catche = ReplyCacheModel.findAll({ where: { msgId: msgId }, order: [['createdAt', 'DESC']] });
+        const catche = ReplyCacheModel.findOne({ where: { msgId: msgId }, order: [['id', 'ASC']] });
         return catche;
     };
     getCacheForId = (Id: number) => {

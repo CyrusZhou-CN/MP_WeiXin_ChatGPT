@@ -10,7 +10,7 @@ import ReplyCache from '../../components/replyCache';
 import SystemLog from '../../components/systemLog';
 import { wxBizMsgCrypt, genResponseId } from "../../components/wxCrypt";
 import writeToFile from '../../components/log'
-import ReplyCacheModel from '../../db/models/reply_cache'
+
 async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: boolean, sMsgTimestamp: string, sMsgNonce: string): Promise<void> {
   if (!xml || !xml.msgid || !xml.fromusername || !xml.tousername || !xml.content) {
     writeToFile(`error:${xml.fromusername}, ${xml.tousername}`, xml);
@@ -23,7 +23,6 @@ async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: bool
   const responseId = genResponseId(seed); // 生成 4 位随机数
   // 查询缓存
   const idRegExp = /^([0-9a-zA-Z]{4}|\[[0-9a-zA-Z]{4}\]|【[0-9a-zA-Z]{4}】)$/; // 匹配四位数字、[四位数字]、【四位数字】
-  let result = '';
   let cache = null;
   let message: Message = {
     FromUserName: xml.fromusername,
@@ -32,7 +31,7 @@ async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: bool
   if (idRegExp.test(xml.content)) {
     const regulatedStr = xml.content.replace(/[【】[\]]/g, ""); // 替换方括号和圆括号为空字符串
     cache = await ReplyCache.getCacheForResponseId(regulatedStr);
-    if (cache.length === 0) {
+    if (cache==null) {
       message.reply = '服务码错误请检查！';
       const replyXmlMessage = isEncrypt
         ? wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce)[1]
@@ -44,19 +43,16 @@ async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: bool
   } else {
     cache = await ReplyCache.getCacheForMsgId(xml.msgid);
   }
-  if (cache.length > 0) {
+  if (cache!==null) {
     // 如果缓存存在且未过期，直接返回响应
-    result = await formatReply(cache, xml);
-    if (!result) {
+    if (cache.reply===null) {
       let ask = 0;
-      for (let row of cache) {
-        ask = row.ask + 1;
-        await row.update({ ask: ask });
-      }
+      ask = cache.ask + 1;
+      await cache.update({ ask: ask });
       if (ask > 1) {
         message.reply = sysconfig.isAuthenticated
-          ? `需要较长时间处理，请稍后得到结果后会马上反馈给您！或者稍后发送服务码【${cache[0].responseId}】获取结果`
-          : `需要较长时间处理，由于公众号还没有认证，请稍后发送服务码【${cache[0].responseId}】获取结果`;
+          ? `需要较长时间处理，请稍后得到结果后会马上反馈给您！或者稍后发送服务码【${cache.responseId}】获取结果`
+          : `需要较长时间处理，由于公众号还没有认证，请稍后发送服务码【${cache.responseId}】获取结果`;
         try {
           const replyXmlMessage = isEncrypt
             ? wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce)[1]
@@ -70,7 +66,7 @@ async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: bool
       }
     } else {
       try {
-        message.reply = result;
+        message.reply = cache.reply;
         const replyXmlMessage = isEncrypt
           ? wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce)[1]
           : textMessage(message);
@@ -86,9 +82,21 @@ async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: bool
     const newRecord = await ReplyCache.saveCache(xml.fromusername, xml.tousername, xml.msgid, responseId, xml.content, null, expireAt); // 将响应 ID 插入数据库
     const reply = await aichat.getReply(xml.content);
     writeToFile(`aichat.getReply:${xml.fromusername}, ${xml.tousername}`, reply);
-    await newRecord.update({ reply: reply }); // 将响应数据更新到数据库
+    let [text,nextText] = await truncatedString(reply);    
+    let nextResId = genResponseId(`${text}_${Date.now()}_${xml.FromUserName}`)
+    text = `${text}\n下一页发送【${nextResId}】获取结果`;
+    await newRecord.update({ reply: text }); // 将响应数据更新到数据库
+    while (nextText.length>0) {
+      [text,nextText] = await truncatedString(nextText);
+      let resId = genResponseId(`${text}_${Date.now()}_${xml.FromUserName}`)
+      if (nextText.length>0) {        
+        text = `${text}\n下一页发送【${resId}】获取结果`;
+      }
+      await ReplyCache.saveCache(xml.fromusername, xml.tousername, xml.msgid, nextResId, '', text, new Date(Date.now() + 60 * 60 * 24 * 1000))
+      nextResId = resId;
+    }
     try {
-      message.reply = await formatReplyString(reply, xml);
+      message.reply = text;
       const replyXmlMessage = isEncrypt
         ? wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce)[1]
         : textMessage(message);
@@ -119,34 +127,17 @@ function sendMessage(res: NextApiResponse, replyXmlMessage: string) {
   res.setHeader('Content-Type', 'application/xml');
   res.status(200).send(replyXmlMessage);
 }
-async function formatReply(rows: ReplyCacheModel[], xml: any) {
-  if (rows.length === 0) {
-    return '';
-  }
 
-  let result = '';
-  for (const row of rows) {
-    if (row.reply) {
-      result += `${row.reply}\n`;
-    }
+async function truncatedString(text: string) {
+  const truncatedReply= truncatedToByteString(text,1000);
+  let savString='';
+  if (truncatedReply.length < text.length) {
+    savString = text.substring(truncatedReply.length, text.length-truncatedReply.length);    
   }
-  return await formatReplyString(result,xml);
-}
-async function formatReplyString(test: string, xml: any) {
-  const truncatedReply= convertToByteString(test,1000);
-  if (truncatedReply.length < test.length) {
-    const savString = test.substring(truncatedReply.length, test.length-truncatedReply.length);
-    const expireAt = new Date(Date.now() + 60 * 60 * 24 * 1000); // 缓存有效期为 1 天
-    const timestamp = Date.now(); // 当前时间戳
-    const seed = `${truncatedReply}_${timestamp}_${xml.FromUserName}`
-    const responseId = genResponseId(seed)
-    test = `${truncatedReply}\n下一页发送【${responseId}】获取结果`;
-    await ReplyCache.saveCache(xml.fromusername, xml.tousername, xml.msgid, responseId, '', savString, expireAt)
-  }
-  return test;
+  return [truncatedReply,savString];
 }
 // 返回指定字节的文字
-function convertToByteString(content: string,length:number): string {
+function truncatedToByteString(content: string,length:number): string {
   let byteCount = 0;
   let result = '';
   for (let i = 0; i < content.length; i++) {
