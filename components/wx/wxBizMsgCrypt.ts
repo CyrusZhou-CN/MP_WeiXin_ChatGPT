@@ -24,7 +24,15 @@ export class WXBizMsgCrypt {
     this.encodingAesKey = encodingAesKey;
     this.appId = appId;
   }
-
+  public encrypt(replyMsg: string, timeStamp: string | null, nonce: string): [number, string] {
+    const pc = new Prpcrypt(this.encodingAesKey);
+    //加密
+    const [ret,encrypt] = pc.encrypt(replyMsg, this.appId);    
+    if (ret !== 0) {
+      return [ret,getErrorMsg(ret)];
+    }
+    return [ErrorCode.OK,encrypt];
+  }
   /**
    * 将公众平台回复用户的消息加密打包.
    * <ol>
@@ -42,18 +50,13 @@ export class WXBizMsgCrypt {
    * @return [number, string] 成功0，失败返回对应的错误码
    */
   public encryptMsg(replyMsg: string, timeStamp: string | null, nonce: string): [number, string] {
-    const pc = new Prpcrypt(this.encodingAesKey);
-
-    //加密
-    const [ret,encrypt] = pc.encrypt(replyMsg, this.appId);    
-    if (ret !== 0) {
-      return [ret,getErrorMsg(ret)];
+    const [code,encrypt] = this.encrypt(replyMsg, timeStamp, nonce);
+    if (code !== 0) {
+      return [code,getErrorMsg(code)];
     }
-
     if (timeStamp == null) {
       timeStamp = new Date().getTime().toString();
     }
-
     //生成安全签名
     const sha1 = new SHA1();
     const [errCode,signature] = sha1.getSHA1(this.token, timeStamp, nonce, encrypt);
@@ -65,6 +68,7 @@ export class WXBizMsgCrypt {
     //生成发送的xml
     const xmlparse = new XMLParse();
     const encryptMsg = xmlparse.generate(encrypt, signatureStr, timeStamp, nonce);
+    writeToFile('encryptMsg', encryptMsg);
     return [ErrorCode.OK,encryptMsg];
   }
 
@@ -112,8 +116,6 @@ export class WXBizMsgCrypt {
     }
 
     if (signature !== msgSignature) {
-      //console.log(`signature !== msgSignature:${signature} !== ${msgSignature}`);
-      writeToFile("log", `signature !== msgSignature:${signature} !== ${msgSignature}`);
       return [ErrorCode.ValidateSignatureError,getErrorMsg(ErrorCode.ValidateSignatureError)];
     }
     const [result,msg] = pc.decrypt(encryptStr, this.appId);
@@ -122,6 +124,7 @@ export class WXBizMsgCrypt {
     }
     return [ErrorCode.OK,msg];
   }
+  
   public parseFromString(body: any):[number,any] {
     const xmlparse = new XMLParse();
     return xmlparse.parse(body);

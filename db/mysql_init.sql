@@ -19,6 +19,7 @@ CREATE TABLE `reply_cache` (
   `responseId` varchar(64) NOT NULL,
   `input` text NOT NULL,
   `reply` text NULL,
+  `ask` int(11) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `expireAt` timestamp NOT NULL,

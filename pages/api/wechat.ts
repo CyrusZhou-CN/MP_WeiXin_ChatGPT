@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import aichat from "../../components/aichat"
 import validateToken from "../../components/validateToken"
-import { Message, XmlMessage } from "../../components/message"
+import { Message } from "../../components/message"
 import { textMessage } from "../../components/template"
 import sysconfig from '../../components/sysconfig'
 import axiosLibrary from 'axios';
@@ -10,8 +10,10 @@ import ReplyCache from '../../components/replyCache';
 import SystemLog from '../../components/systemLog';
 import { wxBizMsgCrypt, genResponseId } from "../../components/wxCrypt";
 import writeToFile from '../../components/log'
+import ReplyCacheModel from '../../db/models/reply_cache'
 async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: boolean, sMsgTimestamp: string, sMsgNonce: string): Promise<void> {
   if (!xml || !xml.msgid || !xml.fromusername || !xml.tousername || !xml.content) {
+    writeToFile(`error:${xml.fromusername}, ${xml.tousername}`, xml);
     SystemLog.createLog(xml.fromusername, xml.tousername, 'error', `${JSON.stringify(xml)}`); // 输出无效的XML对象
     return;
   }
@@ -23,81 +25,148 @@ async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: bool
   const idRegExp = /^([0-9a-zA-Z]{4}|\[[0-9a-zA-Z]{4}\]|【[0-9a-zA-Z]{4}】)$/; // 匹配四位数字、[四位数字]、【四位数字】
   let result = '';
   let cache = null;
+  let message: Message = {
+    FromUserName: xml.fromusername,
+    ToUserName: xml.tousername
+  };
   if (idRegExp.test(xml.content)) {
     const regulatedStr = xml.content.replace(/[【】[\]]/g, ""); // 替换方括号和圆括号为空字符串
-    const rows = await ReplyCache.getCache(regulatedStr);
-    if (Array.isArray(rows)) { // 判断是否为数组类型
-      cache = rows[0];
-      rows.forEach((row: any) => {
-        const { reply } = row;
-        if (reply) {
-          result += `${reply}\n`; // 添加换行符 `\n`
-        }
-      });
-    } else {
-      const { reply } = rows as any; // 单个对象
-      cache = rows;
-      if (reply) {
-        result = `${reply}`;
-      }
+    cache = await ReplyCache.getCacheForResponseId(regulatedStr);
+    if (cache.length === 0) {
+      message.reply = '服务码错误请检查！';
+      const replyXmlMessage = isEncrypt
+        ? wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce)[1]
+        : textMessage(message);
+      writeToFile(`replyXmlMessage:${xml.fromusername}, ${xml.tousername}`, replyXmlMessage);
+      sendMessage(res,replyXmlMessage);
+      return;
     }
-    //console.log('rows:', rows);
-    writeToFile("rows:", rows);
+  } else {
+    cache = await ReplyCache.getCacheForMsgId(xml.msgid);
   }
-  if (cache) {
+  if (cache.length > 0) {
     // 如果缓存存在且未过期，直接返回响应
-    let message;
-    if (result) {
-      message = { FromUserName: xml.fromusername, ToUserName: xml.tousername, reply: result };
+    result = await formatReply(cache, xml);
+    if (!result) {
+      let ask = 0;
+      for (let row of cache) {
+        ask = row.ask + 1;
+        await row.update({ ask: ask });
+      }
+      if (ask > 1) {
+        message.reply = sysconfig.isAuthenticated
+          ? `需要较长时间处理，请稍后得到结果后会马上反馈给您！或者稍后发送服务码【${cache[0].responseId}】获取结果`
+          : `需要较长时间处理，由于公众号还没有认证，请稍后发送服务码【${cache[0].responseId}】获取结果`;
+        try {
+          const replyXmlMessage = isEncrypt
+            ? wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce)[1]
+            : textMessage(message);
+          writeToFile(`replyXmlMessage:${xml.fromusername}, ${xml.tousername}`, replyXmlMessage);
+          sendMessage(res,replyXmlMessage);          
+        } catch (error) {
+          writeToFile(`error:${xml.fromusername}, ${xml.tousername}`, error);
+          SystemLog.createLog(xml.fromusername, xml.tousername, 'error', `${JSON.stringify(error)}`);
+        }
+      }
     } else {
-      message = { FromUserName: xml.fromusername, ToUserName: xml.tousername, reply: '正在处理，请稍后...' };
-    }
-    if (isEncrypt) {
-      const [c, d] = wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce);
-      res.send(d);
-    } else {
-      res.send(textMessage(message));
+      try {
+        message.reply = result;
+        const replyXmlMessage = isEncrypt
+          ? wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce)[1]
+          : textMessage(message);
+        writeToFile(`replyXmlMessage:${xml.fromusername}, ${xml.tousername}`, replyXmlMessage);
+        sendMessage(res,replyXmlMessage);
+      } catch (error) {
+        writeToFile(`error:${xml.fromusername}, ${xml.tousername}`, error);
+        SystemLog.createLog(xml.fromusername, xml.tousername, 'error', `${JSON.stringify(error)}`);
+      }
     }
   } else {
     // 如果缓存不存在或已过期，则查询 AI Chat Bot 并保存缓存和请求
     const newRecord = await ReplyCache.saveCache(xml.fromusername, xml.tousername, xml.msgid, responseId, xml.content, null, expireAt); // 将响应 ID 插入数据库
-    let message;
-    if (sysconfig.isAuthenticated === true) {
-      message = { FromUserName: xml.fromusername, ToUserName: xml.tousername, reply: `正在处理【${responseId}】，请稍后得到结果后会马上反馈给您！` };
-    } else {
-      message = { FromUserName: xml.fromusername, ToUserName: xml.tousername, reply: `正在处理，由于公众号还没有认证，请稍后发送【${responseId}】获取结果` };
-    }
-    if (isEncrypt) {
-      const [c, d] = wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce);
-      res.send(d);
-    } else {
-      res.send(textMessage(message));
-    }
     const reply = await aichat.getReply(xml.content);
+    writeToFile(`aichat.getReply:${xml.fromusername}, ${xml.tousername}`, reply);
     await newRecord.update({ reply: reply }); // 将响应数据更新到数据库
-    if (sysconfig.isAuthenticated === true) {
-      try {
-        let replyXmlMessage = '';
-        if (isEncrypt) {
-          const [c, d] = wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce);
-          replyXmlMessage = d;
-        } else {
-          replyXmlMessage = textMessage(message);
-        }
+    try {
+      message.reply = await formatReplyString(reply, xml);
+      const replyXmlMessage = isEncrypt
+        ? wxBizMsgCrypt.encryptMsg(textMessage(message), sMsgTimestamp, sMsgNonce)[1]
+        : textMessage(message);
+      writeToFile(`replyXmlMessage:${xml.fromusername}, ${xml.tousername}`, replyXmlMessage);
+      sendMessage(res,replyXmlMessage);
+      if (sysconfig.isAuthenticated) {
         const AccessToken = await getAccessToken();
-        const replyRes = await axiosLibrary.post(`https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=${AccessToken}`,
-          replyXmlMessage, {
-          headers: {
-            'Content-Type': 'text/xml;charset=utf-8',
-            'Content-Length': Buffer.byteLength(replyXmlMessage, 'utf8')
+        const replyRes = await axiosLibrary.post(
+          `https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=${AccessToken}`,
+          replyXmlMessage,
+          {
+            headers: {
+              'Content-Type': 'application/xml;charset=utf-8',
+              'Content-Length': Buffer.byteLength(replyXmlMessage, 'utf8'),
+            },
           }
-        });
+        );
+        writeToFile(`info:${xml.fromusername}, ${xml.tousername}`, replyRes);
         SystemLog.createLog(xml.fromusername, xml.tousername, 'info', `${JSON.stringify(replyRes)}`);
-      } catch (error) {
-        SystemLog.createLog(xml.fromusername, xml.tousername, 'error', `${JSON.stringify(error)}`);
       }
+    } catch (error) {
+      writeToFile(`error:${xml.fromusername}, ${xml.tousername}`, error);
+      SystemLog.createLog(xml.fromusername, xml.tousername, 'error', `${JSON.stringify(error)}`);
     }
   }
+}
+function sendMessage(res: NextApiResponse, replyXmlMessage: string) {
+  res.setHeader('Content-Type', 'application/xml');
+  res.status(200).send(replyXmlMessage);
+}
+async function formatReply(rows: ReplyCacheModel[], xml: any) {
+  if (rows.length === 0) {
+    return '';
+  }
+
+  let result = '';
+  for (const row of rows) {
+    if (row.reply) {
+      result += `${row.reply}\n`;
+    }
+  }
+  return await formatReplyString(result,xml);
+}
+async function formatReplyString(test: string, xml: any) {
+  const truncatedReply= convertToByteString(test,1000);
+  if (truncatedReply.length < test.length) {
+    const savString = test.substring(truncatedReply.length, test.length-truncatedReply.length);
+    const expireAt = new Date(Date.now() + 60 * 60 * 24 * 1000); // 缓存有效期为 1 天
+    const timestamp = Date.now(); // 当前时间戳
+    const seed = `${truncatedReply}_${timestamp}_${xml.FromUserName}`
+    const responseId = genResponseId(seed)
+    test = `${truncatedReply}\n下一页发送【${responseId}】获取结果`;
+    await ReplyCache.saveCache(xml.fromusername, xml.tousername, xml.msgid, responseId, '', savString, expireAt)
+  }
+  return test;
+}
+// 返回指定字节的文字
+function convertToByteString(content: string,length:number): string {
+  let byteCount = 0;
+  let result = '';
+  for (let i = 0; i < content.length; i++) {
+    const code = content.charCodeAt(i);
+    if (code >= 0x0001 && code <= 0x007F) {
+      byteCount += 1;
+    } else if (code >= 0x0080 && code <= 0x07FF) {
+      byteCount += 2;
+    } else if (code >= 0x0800 && code <= 0xFFFF) {
+      byteCount += 3;
+    } else {
+      byteCount += 4;
+    }
+    if (byteCount <= length) {
+      result += content.charAt(i);
+    } else {
+      break;
+    }
+  }
+  return result;
 }
 
 async function handleSubscribeEvent(xml: any, res: NextApiResponse): Promise<void> {
@@ -106,13 +175,14 @@ async function handleSubscribeEvent(xml: any, res: NextApiResponse): Promise<voi
 }
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
-  const { signature, timestamp, nonce, echostr,encrypt_type, msg_signature} = req.query;
+  const { signature, timestamp, nonce, echostr, encrypt_type, msg_signature } = req.query;
   const sMsgTimestamp = timestamp as string;
   const sMsgNonce = nonce as string;
   const msgSignature = signature as string;
+  const sMsgSignature = msg_signature as string;
   let result;
   try {
-    result = await validateToken(req);    
+    result = await validateToken(req);
   } catch (error: any) {
     writeToFile('error', error);
     //console.error(error.message);
@@ -121,23 +191,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       res.send(result);
       break;
-    case 'POST':     
-      const sMsg = req.body; 
+    case 'POST':
+      const sMsg = req.body;
       writeToFile("req.query:", req.query);
-      writeToFile("req.query:", typeof sMsg);
+      writeToFile("req.typeof:", typeof sMsg);
       writeToFile('req.body:', sMsg);
       let [co, xml] = wxBizMsgCrypt.parseFromString(sMsg);
       let isEncrypt = false;
       if (xml?.encrypt && !xml?.content) {
         isEncrypt = true;
-        const [dc, decryptedMessage] = wxBizMsgCrypt.decryptMsg(msgSignature, sMsgTimestamp, sMsgNonce, sMsg);
+        const [dc, decryptedMessage] = wxBizMsgCrypt.decryptMsg(sMsgSignature, sMsgTimestamp, sMsgNonce, sMsg);
         let [_, xmls] = wxBizMsgCrypt.parseFromString(decryptedMessage);
         xml = xmls;
       }
       const msgType = xml?.msgtype;
       switch (msgType) {
         case "text":
-          await handleTextMessage(xml, res, isEncrypt, msgSignature, sMsgNonce);
+          await handleTextMessage(xml, res, isEncrypt, sMsgTimestamp, sMsgNonce);
           break;
         case "event":
           switch (xml?.event) {

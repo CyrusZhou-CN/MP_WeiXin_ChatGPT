@@ -1,4 +1,4 @@
-import {SystemLogModel} from '../db';
+import SystemLogModel from "../db/models/system_log";
 
 export class SystemLog {
     getLatestLogs=()=> {

@@ -17,7 +17,7 @@ export default class SHA1 {
    */
   public getSHA1(token: string, timestamp: string, nonce: string, encrypt_msg: string): [number, string | null] {
     try {
-      const array: string[] = [token, timestamp, nonce];
+      const array: string[] = [encrypt_msg,token, timestamp, nonce];
       array.sort();
       const str: string = array.join('');
       return [ErrorCode.OK, sha1(str)];

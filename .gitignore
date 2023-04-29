@@ -31,3 +31,4 @@ package-lock.json
 .next.zip
 .env.prod
 .next.zip
+log/*

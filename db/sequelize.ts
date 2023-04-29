@@ -13,6 +13,10 @@ let sequelize = new Sequelize({
     database: sysconfig.dbDatabase,
     port: sysconfig.dbPort,
     dialect: dialect,
+    // 设置日志选项
+    logging: (msg) => {
+      writeToFile('sequelize', msg)
+    }
   });
 // 导出 sequelize 实例
 export default sequelize;

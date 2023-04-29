@@ -1,4 +1,4 @@
-import { SystemLogModel } from '../../db';
+import SystemLogModel from '../../db/models/system_log';
 import sequelize from '../../db/sequelize';
 import SystemLog from '../systemLog';
 

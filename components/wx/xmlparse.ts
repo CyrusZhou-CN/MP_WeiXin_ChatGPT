@@ -1,5 +1,4 @@
 import writeToFile from "../log";
-import { XmlMessage } from "../message";
 import {ErrorCode} from "./errorCode";
 import { DOMParser } from 'xmldom'
 

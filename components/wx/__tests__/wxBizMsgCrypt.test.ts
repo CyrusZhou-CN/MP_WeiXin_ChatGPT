@@ -29,7 +29,7 @@ test('encrypt and decrypt message with WXBizMsgCrypt', () => {
 test('decrypt [WeiXin] message with WXBizMsgCrypt', () => {
   const timeStamp = '1682516881';
   const nonce = '1286607531';
-  const msg_signature = 'bb10af24bdc231d8e89279a4c3a5b5397e40b881';
+  const msg_signature = '83b56e207b64a881558237134bb17a0610dffde7';
   const originalMsg = `<xml><ToUserName><![CDATA[gh_651c159bef90]]></ToUserName><Encrypt><![CDATA[TBgsmBoUXl1rt5Ev1jtcr0zzV7NlQvIi1W2K57kP4kMB8hGCzijqWt1qMPqXTRLZYMywDMHa0Ib9HNZ6UdyLNA6q71oaxX4tuJlllAVUppaehZPRZZS75WO2o6xzoDddNaFM/xNa5mtg7zWtXVTtdjovcvwqHkoe6WzyQ96IcWf8Xxzgl07+tHAtoTEbVqIAz5PpkUAc4wntlqgpRI7yN8aLOZAlFlo9nykF0Yr9hAcfg7+wt7V6kXyOOdZXIkIjxIxVmGLvEncAGN5tcb1RRUZ+h6cpSULu18GFDOEuntp153JB41eQ30FylloodeXQpd9eIrz6vdPjuM0Uzur1aS3GfpZ+n/YonUmGzGs8MNqLY0k7aFuIC3v69GQzs/CJsmFqFUCfQT9Pvr1qrPzIVMHXxh2RrqXOJ4PolpHoa3/XZT49Sv6ivs7fzZNhyIfIHKi1wYDK3HLf2uVyUEcuxQ==]]></Encrypt></xml>`
   const crypter = new WXBizMsgCrypt(sysconfig.token, sysconfig.encodingAESKey, sysconfig.appID);
   const BeDecodedMsg ='<xml><ToUserName><![CDATA[gh_651c159bef90]]></ToUserName>\n'
@@ -42,4 +42,16 @@ test('decrypt [WeiXin] message with WXBizMsgCrypt', () => {
   let [deerrCode, decodedMsg] = crypter.decryptMsg(msg_signature, timeStamp, nonce, originalMsg);
   expect(deerrCode).toBe(0);
   expect(decodedMsg).toBe(BeDecodedMsg);
+  
+  let [enerrCode, encryptedMsg] = crypter.encryptMsg(BeDecodedMsg, timeStamp, nonce);
+  expect(enerrCode).toBe(0);
+  console.log('encryptedMsg:', encryptedMsg);
+  let xmlTree = new DOMParser().parseFromString(encryptedMsg, 'text/xml');
+
+  let msgSignNode = xmlTree.getElementsByTagName('MsgSignature')[0];
+  let msgSign = msgSignNode.textContent ||"";
+  let [deerrCode1, decodedMsg1] = crypter.decryptMsg(msgSign, timeStamp, nonce, encryptedMsg);
+
+  expect(deerrCode1).toBe(0);
+  expect(decodedMsg1).toBe(BeDecodedMsg);
 });

@@ -3,7 +3,7 @@ import { createCipheriv, createDecipheriv } from "crypto";
 import { ErrorCode, getErrorMsg } from "./errorCode";
 import { PKCS7Encoder } from "./pkcs7Encoder";
 import writeToFile from "../log";
-const fs = require('fs');
+import { Buffer } from 'buffer';
 /**
  * Prpcrypt class
  *
@@ -24,19 +24,22 @@ export class Prpcrypt {
      */
     public encrypt(text: string, appid: string): [number, string] {
       try {
-        // 获得 16 位随机字符串，填充到明文之前
-        const random = this.getRandomStr();
-        text = random + text + appid;
+        appid = appid.trim();
+        const lenBuffer = Buffer.alloc(4, 0); // 创建一个长度为 4 的空的 Buffer
+        lenBuffer.writeInt32BE(text.length); // 将字符串的长度转成网络字节序写入 Buffer
+        const random = Buffer.from(this.getRandomStr());
+        const appidBuffer = Buffer.from(appid);
+        let textBuffer = Buffer.from(text);
+        textBuffer = Buffer.concat([random, lenBuffer, textBuffer, appidBuffer]);
         // 网络字节序
-        const size = 16;
         const iv = this.key.slice(0, 16);
         // 使用自定义的填充方式对明文进行补位填充
         const pkc_encoder = new PKCS7Encoder();
-        const encodedText = pkc_encoder.encode(text);
+        const encodedBuffer = pkc_encoder.encode(textBuffer)
         const cipher = createCipheriv("AES-256-CBC", this.key, iv);
+        cipher.setAutoPadding(false);
         // 加密
-        let encrypted = cipher.update(encodedText, "utf8", "base64");
-        encrypted += cipher.final("base64");
+        const encrypted = Buffer.concat([cipher.update(encodedBuffer), cipher.final()]).toString('base64');
         // 使用 BASE64 对加密后的字符串进行编码
         return [ErrorCode.OK, encrypted];
       } catch (e) {
@@ -54,26 +57,26 @@ export class Prpcrypt {
      */
     public decrypt(encrypted: string, appid: string): [number, string] {
       try {
+        appid = appid.trim();
         // 使用 BASE64 对需要解密的字符串进行解码
         const iv = this.key.slice(0, 16);
-        const cipher = createDecipheriv("AES-256-CBC", this.key, iv);
-        cipher.setAutoPadding(false);
-        let decipher = cipher.update(encrypted, 'base64', 'utf8');
-        decipher += cipher.final('utf8');
-        // 去除补位字符        
+        const decipher = createDecipheriv("AES-256-CBC", this.key, iv);
+        decipher.setAutoPadding(false);
+        const decryptedBuffer = Buffer.concat([decipher.update(encrypted,'base64'), decipher.final()]);
+        // 去除补位字符
         const pkc_encoder = new PKCS7Encoder();
-        const result = pkc_encoder.decode(decipher);
+        const resultBuffer = pkc_encoder.decode(decryptedBuffer);
         // 去除 16 位随机字符串，网络字节序和 AppId
-        if (result.length < 16) {
+        if (resultBuffer.length < 16) {
           return [ErrorCode.IllegalBuffer, getErrorMsg(ErrorCode.IllegalBuffer)];
-        }        
-        const content = result.replace(/[\x00\x01\x1b\x7f\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/g, '').slice(16);
-        const xml_len = content.length;
-        const from_appid = content.substring(xml_len - appid.length)
-        const xmlContent = content.slice(0,xml_len - appid.length);
-        // 将字符串写入文件中       
-        writeToFile('content', content);
+        }
+        let content = resultBuffer.slice(16+4).toString(); // 去除16位随机数+4位网络字节序
+        writeToFile('content:', content);
+        const from_appid = content.substring(content.length-appid.length, content.length);
+        const xmlContent = content.substring(0, content.length-appid.length);
+        writeToFile('xmlContent:', xmlContent);
         if (from_appid !== appid) {
+          console.log(`from_appid, appid: ${from_appid}, ${appid}`);
           return [ErrorCode.ValidateAppidError, getErrorMsg(ErrorCode.ValidateAppidError)];
         }
         return [ErrorCode.OK, xmlContent];
