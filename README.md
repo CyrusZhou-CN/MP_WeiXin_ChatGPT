@@ -79,8 +79,6 @@ npm test
 
 - `updatedAt`：记录更新时间。
 
-在应用程序中，我们使用了 `winston` 模块来记录日志，并将日志保存到了 `system_log` 数据表中。
-
 在 `reply_cache` 数据表中，我们定义了以下字段：
 
 - `id`：主键，自增长的唯一标识符。
@@ -91,7 +89,9 @@ npm test
 
 - `input`：用户的提问内容。
 
-- `reply`：ChatGPT 的回答内容，如果缓存已过期，则为 `NULL`。
+- `reply`：ChatGPT 的回答内容
+
+- `ask` int(11) NOT NULL 微信公众号请求次数。
 
 - `createdAt`：记录创建时间。
 
@@ -99,7 +99,8 @@ npm test
 
 - `expireAt`：缓存过期时间，用于控制缓存的有效期。
 
-在应用程序中，我们使用 `sequelize` 模块来操作缓存，并将缓存保存到了 `reply_cache` 数据表中。这样可以使得重复的用户提问得到相同的回答，提高了应用程序的响应速度，同时避免了过多地请求 OpenAI API。
+在应用程序中，我们使用 `sequelize` 模块来操作缓存，并将缓存保存到了 `reply_cache` 数据表中。
+
 数据库文件位于db\mysql_init.sql
 ## 编译发布
 1. 在项目根目录执行以下命令，打包应用程序。
