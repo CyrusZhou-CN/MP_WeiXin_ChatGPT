@@ -32,3 +32,5 @@ package-lock.json
 .env.prod
 .next.zip
 log/*
+
+.vercel

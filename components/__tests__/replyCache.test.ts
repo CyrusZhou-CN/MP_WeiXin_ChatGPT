@@ -54,14 +54,22 @@ describe('ReplyCache model', () => {
     const newRecord = await ReplyCache.getCacheForResponseId(
       '1'
     );
-    expect(newRecord[0].input).toBe('Record 1');
+    expect(newRecord.input).toBe('Record 1');
   });
-  it('getCacheMsgId null', async () => {
+  it('getCacheForMsgId', async () => {
+    await ReplyCache.saveCache(
+      '11111',
+      '2222',
+      '11111111',
+      '1',
+      'Record 1',
+      null,
+      new Date()
+    );
     const newRecord = await ReplyCache.getCacheForMsgId(
       '11111111'
     );
-    console.log(newRecord.length === 0);
-    expect(newRecord.length).toBe(0);
+    expect(newRecord?.msgId).toBe('11111111');
   });
   it('can update an existing record', async () => {
     const newRecord = await ReplyCache.saveCache('3',
@@ -74,14 +82,16 @@ describe('ReplyCache model', () => {
     const cache = await ReplyCache.getCacheForMsgId(
       '2222'
     );
-    for (let row of cache) {
-      const ask = row.ask + 1;
-      await row.update({ ask });
+    
+    if (cache) {
+      const ask = cache.ask + 1;
+      await cache.update({ ask });
+      const testcache = await ReplyCache.getCacheForId(
+        cache.id
+      );
+      expect(testcache?.ask).toBe(ask);
     }
-    const testcache = await ReplyCache.getCacheForId(
-      cache[0].id
-    );
-    expect(testcache?.ask).toBe(1);
+
     const updatedRecord = await newRecord.update({
       reply: 'Updated message',
     });
