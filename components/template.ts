@@ -1,17 +1,15 @@
 import { Message } from "./message"; // 假设 message 模块中定义了 Message 类型
 // 回复文本消息
 export function textMessage(message: Message): string {
-  const createTime = new Date().getTime();
+  message.CreateTime = new Date().getTime();
   return `<xml>
-<ToUserName><![CDATA[${message.FromUserName}]]>
-</ToUserName><FromUserName><![CDATA[${message.ToUserName}]]>
-</FromUserName>
-<CreateTime>${createTime}</CreateTime>
+<ToUserName><![CDATA[${message.FromUserName}]]></ToUserName>
+<FromUserName><![CDATA[${message.ToUserName}]]></FromUserName>
+<CreateTime>${message.CreateTime}</CreateTime>
 <MsgType><![CDATA[text]]></MsgType>
 <Content><![CDATA[${message.reply}]]></Content>
 </xml>`;
 }
-
 // 回复图片消息
 export function imageMessage(message: Message): string {
   const createTime = new Date().getTime();
