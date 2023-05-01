@@ -25,3 +25,7 @@
     @apply font-mono text-sm;
   }
   
+  .markdown a {
+    @apply text-blue-500 underline;
+  }
+  
