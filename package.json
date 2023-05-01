@@ -7,7 +7,7 @@
     "dev": "next dev",
     "dev:test": "cross-env NODE_ENV=test next dev",
     "production": "cross-env NODE_ENV=production next start",
-    "build": "next build",
+    "build": "rimraf .next && next build",
     "start": "next start",
     "clean": "npm cache clear --force && rimraf package-lock.json && rimraf pnpm-lock.yaml && rimraf node_modules",
     "lint": "eslint .",
