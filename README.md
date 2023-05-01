@@ -40,8 +40,9 @@
 
 ## 运行说明
 ### 快速启动mysql测试数据库
+```
 docker compose up -d 
-
+```
 ### 调试运行
 1. 在项目根目录执行以下命令，安装依赖包。
 
@@ -67,8 +68,8 @@ npm test
 ## 数据库配置说明
 数据库中创建了两个数据表，分别为 `system_log` 和 `reply_cache`。
 
-在 `system_log` 数据表中，我们定义了以下字段：
-
+### 在 `system_log` 数据表中，我们定义了以下字段：
+```
 - `id`：主键，自增长的唯一标识符。
 
 - `level`：日志级别，支持的值包括 'error', 'warn', 'info', 'debug'。
@@ -78,9 +79,10 @@ npm test
 - `createdAt`：记录创建时间。
 
 - `updatedAt`：记录更新时间。
+```
 
-在 `reply_cache` 数据表中，我们定义了以下字段：
-
+### 在 `reply_cache` 数据表中，我们定义了以下字段：
+```
 - `id`：主键，自增长的唯一标识符。
 
 - `msgId`：消息的唯一标识符，在微信公众号中作为消息的身份标识符。
@@ -98,7 +100,7 @@ npm test
 - `updatedAt`：记录更新时间。
 
 - `expireAt`：缓存过期时间，用于控制缓存的有效期。
-
+```
 在应用程序中，我们使用 `sequelize` 模块来操作缓存，并将缓存保存到了 `reply_cache` 数据表中。
 
 数据库文件位于db\mysql_init.sql
