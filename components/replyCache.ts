@@ -1,5 +1,4 @@
-import ReplyCacheModel from "../db/models/reply_cache";
-
+import { ReplyCacheModel } from '../db/models';
 export class ReplyCache {
     
     getCacheForResponseId = (responseId: string) => {

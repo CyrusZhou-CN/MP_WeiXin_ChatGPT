@@ -1,5 +1,4 @@
-import SystemLogModel from "../db/models/system_log";
-
+import { SystemLogModel } from '../db/models';
 export class SystemLog {
     getLatestLogs=()=> {
       return SystemLogModel.findAll({order: [['createdAt', 'DESC']], limit: 100});
@@ -21,6 +20,7 @@ export class SystemLog {
       return newRecord;
     };
     findAll = () => SystemLogModel.findAll();
+    findById = (id: number) => SystemLogModel.findByPk(id);
 }
 
 export default new SystemLog();

@@ -2,17 +2,17 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../sequelize';
 
 export class ReplyCacheModel extends Model {
-  public id!: number;
-  public fromusername: string | null | undefined;
-  public tousername: string | null| undefined;
-  public msgId!: string;
-  public responseId!: string;
-  public input!: string;
-  public reply: string | null| undefined;
-  public ask!: number;
-  public createdAt!: Date;
-  public updatedAt!: Date;
-  public expireAt!: Date;
+  declare id: number;
+  declare fromusername: string | null | undefined;
+  declare tousername: string | null| undefined;
+  declare msgId: string;
+  declare responseId: string;
+  declare input: string;
+  declare reply: string | null| undefined;
+  declare ask: number;
+  declare createdAt: Date;
+  declare updatedAt: Date;
+  declare expireAt: Date;
 }
 
 ReplyCacheModel.init(
@@ -22,50 +22,61 @@ ReplyCacheModel.init(
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
+      field: "id"
     },
     fromusername: {
       type: DataTypes.STRING(64),
       allowNull: true,
+      field: "fromusername"
     },
     tousername: {
       type: DataTypes.STRING(64),
       allowNull: true,
+      field: "tousername"
     },
     msgId: {
       type: DataTypes.STRING(64),
       allowNull: false,
+      field: "msgId"
     },
     responseId: {
       type:  DataTypes.STRING(64),
       allowNull: false,
+      field: "responseId"
     },
     input: {
       type: DataTypes.TEXT,
       allowNull: false,
+      field: "input"
     },
     reply: {
       type: DataTypes.TEXT,
       allowNull: true,
       defaultValue: null,
+      field: "reply"
     },
     ask: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
+      field: "ask"
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: "createdAt"
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      field: "updatedAt"
     },
     expireAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: "expireAt"
     },
   },
   {
@@ -78,4 +89,5 @@ ReplyCacheModel.init(
     deletedAt: false,
   }
 );
+
 export default ReplyCacheModel

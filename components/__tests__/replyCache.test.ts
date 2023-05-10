@@ -1,10 +1,10 @@
 import sequelize from '../../db/sequelize';
 import ReplyCache from '../replyCache';
-import {ReplyCacheModel} from '../../db/models/reply_cache';
+import {ReplyCacheModel} from '../../db/models';
 
 describe('ReplyCache model', () => {
   beforeAll(async () => {
-    await sequelize.sync();
+    await ReplyCacheModel.sync();
   });
 
   beforeEach(async () => {
@@ -54,7 +54,7 @@ describe('ReplyCache model', () => {
     const newRecord = await ReplyCache.getCacheForResponseId(
       '1'
     );
-    expect(newRecord.input).toBe('Record 1');
+    expect(newRecord?.input).toBe('Record 1');
   });
   it('getCacheForMsgId', async () => {
     await ReplyCache.saveCache(

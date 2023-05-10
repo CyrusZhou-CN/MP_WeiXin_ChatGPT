@@ -1,0 +1,15 @@
+{
+  "chinese": "中文",
+  "english": "English",
+  "italian": "Italiano",
+  "heading": "Homepage | Connessione di un account WeChat a ChatGPT",
+  "title": "Connessione di un account WeChat a ChatGPT",
+  "Login": "Accesso",
+  "Username": "Nome utente",
+  "Password": "Password",
+  "Submit": "Invia",
+  "Unknown error": "Errore sconosciuto",  
+  "Internal server error": "Errore interno del server",
+  "Incorrect username or password": "Nome utente o password errati",
+  "Login successful": "Accesso effettuato con successo"
+}

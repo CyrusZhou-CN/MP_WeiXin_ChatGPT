@@ -1,3 +1,5 @@
+[Italiano](README.IT.md) | [English](README.EN.md)
+
 # 微信公众号对接ChatGPT程序
 
 这是一个基于 Next.js 开发的微信公众号对接 ChatGPT 程序，可以通过微信公众号直接向 ChatGPT 提问并获取答案。
@@ -25,6 +27,7 @@
    OPENAI_MODEL=gpt-3.5-turbo
    OPENAI_TIMEOUT=60000
    IS_AUTHENTICATED=false
+   NEXTAUTH_SECRET=(可以用命令生成openssl rand -base64 32)
 
    MYSQL_HOST=localhost
    MYSQL_PORT=6306
@@ -149,7 +152,10 @@ npm test
 4. 在微信公众号管理后台中将服务配置为该 PHP 文件的 URL 地址。
 
 如果你使用的是 Vercel，需要注意 Vercel 的函数默认超时时间是 10 秒，而 ChatGPT 处理大量文本时可能会需要更长的时间，因此容易出错。因此，建议在自己的服务器上部署应用程序。
+# 后台管理
+后台地址:http://localhost:3000/admin
 
+用户名/密码：admin/admin
 # 待解决
 认证公众号内容主动发送未测试
 安全模式加密回复未解决，目前只支持 兼容模式 、 明文模式

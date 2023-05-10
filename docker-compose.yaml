@@ -8,7 +8,5 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_HOST: '%'
-    volumes:
-    - ./db/mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql
     ports:
     - "${DB_PORT}:3306"

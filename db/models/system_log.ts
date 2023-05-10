@@ -1,14 +1,14 @@
-import { Sequelize, DataTypes, Model } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import sequelize from '../sequelize';
 
 export class SystemLogModel extends Model {
-  id!: number;
-  level!: 'error' | 'warn' | 'info' | 'debug' | null;
-  fromusername!: string | null;
-  tousername!: string | null;
-  message!: string | null;
-  createdAt!: Date;
-  updatedAt!: Date;
+  declare id: number;
+  declare level: 'error' | 'warn' | 'info' | 'debug' | null;
+  declare fromusername: string | null;
+  declare tousername: string | null;
+  declare message: string | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 SystemLogModel.init(
   {
@@ -55,10 +55,13 @@ SystemLogModel.init(
     }
   },
   {
+    sequelize: sequelize,
     modelName: "SystemLog",
-    tableName: "systemlogs",
+    tableName: "system_log",
     timestamps: true,
-    sequelize
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    deletedAt: false,
   }
 );
 

@@ -6,10 +6,10 @@ import { textMessage } from "../../components/template"
 import sysconfig from '../../components/sysconfig'
 import axiosLibrary from 'axios';
 import { getAccessToken } from '../../components/accessToken';
-import ReplyCache from '../../components/replyCache';
-import SystemLog from '../../components/systemLog';
 import { wxBizMsgCrypt, genResponseId } from "../../components/wxCrypt";
 import writeToFile from '../../components/log';
+import ReplyCache  from '../../components/replyCache';
+import SystemLog  from '../../components/systemLog';
 
 async function handleTextMessage(xml: any, res: NextApiResponse, isEncrypt: number, sMsgTimestamp: string, sMsgNonce: string): Promise<void> {
   if (!xml || !xml.msgid || !xml.fromusername || !xml.tousername || !xml.content) {
@@ -188,7 +188,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     result = await validateToken(req);
   } catch (error: any) {
     writeToFile('error', error);
-    //console.error(error.message);
+    SystemLog.Log('error', `${JSON.stringify(error)}`);
   }
   switch (method) {
     case 'GET':
@@ -233,7 +233,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break;
     default:
       res.setHeader('Allow', ['GET', 'POST']);
-      res.status(405).end(`Method ${method} Not Allowed`);
+      res.status(405).end(`Method ${method} Not Allowed`);      
+      SystemLog.Log('error', `Method ${method} Not Allowed`);
       break;
   }
 };

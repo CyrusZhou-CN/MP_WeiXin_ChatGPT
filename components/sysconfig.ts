@@ -15,6 +15,7 @@ interface SysConfig {
     dbPassword: string;
     dbDatabase: string;
     dbType: string;
+    jwtSecret: string;
   }
 
 
@@ -34,7 +35,8 @@ const sysconfig: SysConfig = {
   dbUserName : process.env.DB_USER || '',
   dbPassword : process.env.DB_PASS || '',
   dbDatabase : process.env.DB_NAME || '',
-  dbType : process.env.DB_TYPE || 'mysql'
+  dbType : process.env.DB_TYPE || 'mysql',
+  jwtSecret : process.env.JWT_SECRET|| 'default-secret'
 };
 if (process.env.OPENAI_TIMEOUT !== undefined && /^\d+$/.test(process.env.OPENAI_TIMEOUT)) {
   sysconfig.openaiTimeout = parseInt(process.env.OPENAI_TIMEOUT);

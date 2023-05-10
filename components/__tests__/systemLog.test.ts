@@ -1,10 +1,10 @@
-import SystemLogModel from '../../db/models/system_log';
+import {SystemLogModel} from '../../db/models';
 import sequelize from '../../db/sequelize';
 import SystemLog from '../systemLog';
 
 describe('SystemLog model', () => {
   beforeAll(async () => {
-    await sequelize.sync();
+    await SystemLogModel.sync();
   });
 
   beforeEach(async () => {
@@ -58,11 +58,9 @@ describe('SystemLog model', () => {
 
   it('can delete an existing record', async () => {
     const newRecord = await SystemLog.createLog('111','222','info','User logged in');
-
+    const id = newRecord.id
     await newRecord.destroy();
-
-    const allRecords = await SystemLog.findAll();
-
-    expect(allRecords).toHaveLength(0);
+    const allRecords = await SystemLog.findById(id);
+    expect(allRecords).toBe(null);
   });
 });
