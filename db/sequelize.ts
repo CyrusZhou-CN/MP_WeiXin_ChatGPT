@@ -4,9 +4,19 @@ import sysconfig from '../components/sysconfig';
 import writeToFile from '../components/log';
 
 // 创建 Sequelize 实例并传递连接参数
-const dialect:Dialect=sysconfig.dbType as Dialect;
-
-let sequelize = new Sequelize({
+const dialect: Dialect = sysconfig.dbType as Dialect;
+let sequelize: Sequelize;
+if (dialect === 'sqlite') {
+  sequelize = new Sequelize({
+    dialect: dialect,
+    storage: 'database.sqlite',
+    // 设置日志选项
+    logging: (msg) => {
+      writeToFile('sequelize', msg)
+    }
+  });
+} else {
+  sequelize = new Sequelize({
     host: sysconfig.dbHost,
     username: sysconfig.dbUserName,
     password: sysconfig.dbPassword,
@@ -18,5 +28,6 @@ let sequelize = new Sequelize({
       writeToFile('sequelize', msg)
     }
   });
+}
 // 导出 sequelize 实例
 export default sequelize;
