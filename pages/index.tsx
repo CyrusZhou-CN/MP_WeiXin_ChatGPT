@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown"
 import markdownStyles from "../styles/markdown-styles.module.css";
 import { SetStateAction, useEffect, useState } from "react";
 import Image, { ImageProps } from "next/image";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 import { GetStaticProps } from "next/types";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { Footer } from "../components/footer";
@@ -81,17 +81,17 @@ const HomePage = ({ markdown }: Props) => {
   return (
     <>
       <Header heading={t('heading')} title={t('title')} />
-        <div className="container">
-          <div className="content">
-            <ReactMarkdown
-              className={markdownStyles["markdown"]}
-              children={markdown}
-              components={components}
-              skipHtml={false}
-              sourcePos={true}
-            />
-          </div>
+      <div className="container">
+        <div className="content">
+          <ReactMarkdown
+            className={markdownStyles["markdown"]}
+            children={markdown}
+            components={components}
+            skipHtml={false}
+            sourcePos={true}
+          />
         </div>
+      </div>
       <Footer />
     </>
   );

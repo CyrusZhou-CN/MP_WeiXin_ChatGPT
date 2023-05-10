@@ -1,6 +1,6 @@
 import React from 'react';
 import Select, { OptionsOrGroups } from 'react-select';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import cnFlag from '/public/images/cn.png';
 import itFlag from '/public/images/it.png';
