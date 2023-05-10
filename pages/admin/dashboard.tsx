@@ -4,7 +4,9 @@ import { Header } from 'components/header';
 import { Footer } from 'components/footer';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Layout, Menu } from 'antd';
-import {ReplyCachePage,SystemLogPage,UserPage} from 'pages/admin/page';
+import ReplyCachePage from './page/replyCachePage';
+import SystemLogPage from './page/systemLogPage';
+import UserPage from './page/userPage';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
