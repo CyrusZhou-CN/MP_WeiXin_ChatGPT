@@ -28,7 +28,7 @@
    OPENAI_TIMEOUT=60000
    IS_AUTHENTICATED=false
    NEXTAUTH_SECRET=(可以用命令生成openssl rand -base64 32)
-
+   NEXTAUTH_URL=http://localhost:3000/(发布后需要改成实际的网站地址)
    MYSQL_HOST=localhost
    MYSQL_PORT=6306
    MYSQL_USER=weixin
@@ -115,7 +115,7 @@ npm test
    npm run build
    ```
 
-2. 将生成的 `.next` 目录和 `package.json` `.env` 文件上传到服务器。
+2. 将生成的 `.next` 目录和 `package.json` `.env` `next.config.js` `next-utils.config.js` `next-i18next.config.js` 文件上传到服务器。
 
    ![发布](./public/images/next.jpg)
 

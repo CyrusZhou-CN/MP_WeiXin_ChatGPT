@@ -28,7 +28,7 @@ This is a ChatGPT program that integrates with WeChat Official Account, which al
    OPENAI_TIMEOUT=60000
    IS_AUTHENTICATED=false
    NEXTAUTH_SECRET=(You can use the command openssl rand -base64 32 to generate a secret)
-
+   NEXTAUTH_URL=http://localhost:3000/ (needs to be changed to the actual website address after deployment)
    MYSQL_HOST=localhost
    MYSQL_PORT=6306
    MYSQL_USER=weixin
