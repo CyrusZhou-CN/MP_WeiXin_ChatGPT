@@ -11,7 +11,7 @@ interface UserFormProps {
 }
 
 const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, onCancel }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("admin");
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -34,14 +34,14 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
   return (
     <Modal
       visible={visible}
-      title={user ? t('Update User') : t('Create User')}
+      title={user ? t('updateUser') : t('createUser')}
       onCancel={onCancel}
       footer={null}>
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Form.Item name="name" label={t('name')} rules={[{ required: true, message: t('Please input name!') as string }]}>
+        <Form.Item name="name" label={t('name')} rules={[{ required: true, message: t('pleaseInputName') as string }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="username" label={t('username')} rules={[{ required: true, message: t('Please input username!') as string }]}>
+        <Form.Item name="username" label={t('username')} rules={[{ required: true, message: t('pleaseInputUserName') as string }]}>
           <Input disabled={user ? true : false} />
         </Form.Item>
         {user ? null : (
@@ -49,18 +49,18 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
             <Form.Item
               name="password"
               label={t('password')} 
-              rules={[{ required: true, message: t('Please input Password!') as string }]}
+              rules={[{ required: true, message: t('pleaseInputPassword') as string }]}
             >
               <Input.Password autoComplete="new-password"/>
             </Form.Item>
             <Form.Item
               name="confirmPassword"
-              label={t('confirm password')}
+              label={t('confirmPassword')}
               dependencies={['password']}
               rules={[
                 {
                   required: true,
-                  message: t('Please confirm your password!') as string,
+                  message: t('pleaseConfirmPassword') as string,
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
@@ -68,7 +68,7 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
                       return Promise.resolve();
                     }
                     return Promise.reject(
-                      new Error(t('The two passwords that you entered do not match!') as string)
+                      new Error(t('passwordsDoNotMatch') as string)
                     );
                   },
                 }),
@@ -78,7 +78,7 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
             </Form.Item>
           </>
         )}
-        <Form.Item name="email" label={t('email')} rules={[{ required: true, message: t('Please input email!') as string }]}>
+        <Form.Item name="email" label={t('email')} rules={[{ required: true, message: t('pleaseInputEmail') as string }]}>
           <Input />
         </Form.Item>
         <Form.Item name="emailVerified" label={t('emailVerified')}>
@@ -87,10 +87,10 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
         <Form.Item>
         <Space direction="horizontal" style={{ display: 'flex', justifyContent: 'center' }}>
         <Button type="primary" htmlType="submit">
-          {user ? t('Update') : t('Create')}
+          {user ? t('update') : t('create')}
         </Button>
         <Button type="dashed" onClick={onCancel}>
-          {t('Cancel')}
+          {t('cancel')}
         </Button>
       </Space>
         </Form.Item>

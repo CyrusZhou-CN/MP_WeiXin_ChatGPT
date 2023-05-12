@@ -1,29 +1,33 @@
 import '../styles/global.css';
-import APP, { AppProps } from 'next/app';
+import { AppProps } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
-import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { SessionProvider } from "next-auth/react"
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import i18n from '../components/i18n' // 导入你的 i18n 配置
+import { initReactI18next } from 'react-i18next';
 
+// 初始化 react-i18next
+i18n.use(initReactI18next).init({
+  fallbackLng: 'cn',
+  lng: 'cn',
+  debug: process.env.NODE_ENV === 'development'
+})
 const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
-  const router = useRouter();
   const { i18n } = useTranslation();
+  const router = useRouter();
   useEffect(() => {
     const handleLanguageChange = (lang: string) => {
       router.push(router.asPath, router.asPath, { locale: lang });
     };
-    try {
-      i18n.on('languageChanged', handleLanguageChange);
 
-      return () => {
-        i18n.off('languageChanged', handleLanguageChange);
-      };
-    } catch (e) {
+    i18n.on('languageChanged', handleLanguageChange);
 
-    }
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
   }, [i18n, router]);
-
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />
@@ -31,5 +35,3 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps) =>
   )
 }
 export default appWithTranslation(MyApp);
-
-

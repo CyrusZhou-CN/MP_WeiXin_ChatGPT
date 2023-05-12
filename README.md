@@ -37,6 +37,7 @@
    ```
 
 4. 将以上配置参数中的 `your_app_id`、`your_app_secret`、`your_token`、`your_encoding_aes_key` 和 `your_openai_api_key` 分别替换为通过 [公众号开发者平台](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) 获取的实际参数值和 [OpenAI API Key](https://platform.openai.com/account/api-keys)。
+
    ![公众平台调试接口](./public/images/weixin.jpg)
 
    注意：在微信公众号管理后台中，URL 的地址是以您的服务器地址为开头的完整地址，如 http://yourdomain.com/api/wechat
@@ -115,6 +116,7 @@ npm test
    ```
 
 2. 将生成的 `.next` 目录和 `package.json` `.env` 文件上传到服务器。
+
    ![发布](./public/images/next.jpg)
 
 3. 在服务器上执行以下命令，安装依赖包。
@@ -136,6 +138,7 @@ npm test
 7. 访问微信公众号，开始使用程序。
 
 8. 有问题可以在[微信公众平台接口调试工具](https://mp.weixin.qq.com/debug)中进行调试
+
 ![调试工具](./public/images/wechat_debug.jpg)
 
 # PHP 请求代理程序

@@ -1,7 +1,10 @@
 {
   "chinese": "中文",
   "english": "English",
-  "italian": "Italiano",
+  "italian": "Italiano",  
+  "404": "404 - Page Not Found",
+  "500": "500 - Server-side error occurred",
+  "backToHome": "Back to home",
   "heading": "Home | WeChat Official Account Integration with ChatGPT Program",
   "title": "WeChat Official Account Integration with ChatGPT Program",
   "Login": "Login",

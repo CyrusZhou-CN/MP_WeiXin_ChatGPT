@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const loginTitle = t('Login');
   const usernameLabel = t('Username');
   const passwordLabel = t('Password');
@@ -26,7 +26,8 @@ const LoginPage = () => {
       console.error('result:', result);
       if (result?.error) {
         console.error('loginerror:', result.error);
-        setErrorMessage(t(result.error) as string);
+        const errorMessage:any = result.error || 'Unknown error';
+        setErrorMessage(t(errorMessage) as string);
       } else if (result) {
         router.push("/admin/dashboard");
       } else {

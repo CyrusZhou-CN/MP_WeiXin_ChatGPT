@@ -13,9 +13,11 @@ const { SubMenu } = Menu;
 
 export default function ServerDashboardPage({ }: any) {
   const { t } = useTranslation('admin');
-  const [currentPage, setCurrentPage] = useState('dashboard');
+  type Page = 'dashboard' | 'history' | 'systemLog' | 'users';
 
-  const handleMenuClick = (key: string) => {
+  const [currentPage, setCurrentPage] = useState<Page>('dashboard');
+
+  const handleMenuClick = (key: Page) => {
     setCurrentPage(key);
   };
 

@@ -9,7 +9,7 @@
     "production": "cross-env NODE_ENV=production next start",
     "build": "rimraf .next && next build",
     "start": "next start",
-    "clean": "npm cache clear --force && rimraf package-lock.json && rimraf pnpm-lock.yaml && rimraf node_modules",
+    "clean": "npm cache clear --force && rimraf package-lock.json pnpm-lock.yaml node_modules .next",
     "lint": "eslint .",
     "test": "docker-compose up -d db && wait-on tcp:localhost:6306 && jest --detectOpenHandles"
   },
@@ -20,8 +20,10 @@
     "date-fns": "^2.29.3",
     "gray-matter": "^4.0.3",
     "i18next": "^22.4.15",
+    "intl-pluralrules": "^2.0.0",
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.2.3",
+    "next": "^13.4.1",
     "next-i18next": "^13.2.2",
     "openai": "^3.2.1",
     "react": "18.2.0",
@@ -32,6 +34,7 @@
     "rehype-parse": "^8.0.4",
     "sequelize": "^6.31.1",
     "sha1": "^1.1.1",
+    "sharp": "^0.32.1",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
@@ -60,9 +63,9 @@
     "fs": "0.0.1-security",
     "jest": "^29.5.0",
     "js-base64": "^3.7.5",
-    "next": "^13.3.4",
     "next-auth": "^4.22.1",
     "postcss": "^8.4.23",
+    "raw-loader": "^4.0.2",
     "rimraf": "^5.0.0",
     "sqlite3": "^5.1.6",
     "ts-jest": "^29.1.0",

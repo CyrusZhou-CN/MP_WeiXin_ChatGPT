@@ -174,7 +174,7 @@ export default function UserPage({ }: any) {
             <Button style={{ float: 'right', paddingRight: 16, marginBottom: 16 }}
                 type="primary"
                 onClick={showModal}
-                title={t('Create User') as string} >{t('Create User')}</Button>
+                title={t('createUser') as string} >{t('createUser')}</Button>
             <Table
                 dataSource={users}
                 columns={columns}

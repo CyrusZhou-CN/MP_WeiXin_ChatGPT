@@ -37,6 +37,7 @@ This is a ChatGPT program that integrates with WeChat Official Account, which al
    ```
    
 4. Replace `your_app_id`, `your_app_secret`, `your_token`, `your_encoding_aes_key`, and `your_openai_api_key` with actual parameter values obtained from [WeChat Official Account Developer Platform](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) and [OpenAI API Key](https://platform.openai.com/account/api-keys).
+
    ![WeChat official account development Platform](./public/images/weixin.jpg)
 
    Note: In the WeChat Official Account management background, the URL is a complete address starting with your server address, such as http://yourdomain.com/api/wechat.
@@ -118,6 +119,7 @@ The database file is located at db\mysql_init.sql
    ```
 
 2. Upload the generated `.next` directory, `package.json`, and `.env` file to the server.
+
    ![Release](./public/images/next.jpg)
 
 3. Execute the following command on the server to install dependencies.
@@ -139,6 +141,7 @@ The database file is located at db\mysql_init.sql
 7. Access WeChat Official Account to start using the program.
 
 8. If you have any questions, you can debug them in the [WeChat Official Account Interface Debugging Tool](https://mp.weixin.qq.com/debug).
+
    ![Debugging tool](./public/images/wechat_debug.jpg)
 
 # PHP Request Proxy Program

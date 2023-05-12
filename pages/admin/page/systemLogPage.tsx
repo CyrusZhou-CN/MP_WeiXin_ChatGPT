@@ -23,11 +23,6 @@ export default function SystemLogPage({ }) {
     const [visible, setVisible] = useState(false);
     const columns = [
         {
-            title: t('id'),
-            dataIndex: 'id',
-            key: 'id',
-        },
-        {
             title: t('level'),
             dataIndex: 'level',
             key: 'level',

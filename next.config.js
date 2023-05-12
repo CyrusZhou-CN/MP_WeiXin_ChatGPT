@@ -1,42 +1,38 @@
-// next.config.js
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 require('dotenv').config();
-const { i18n } = require('./next-i18next.config.js')
 const { loadCustomBuildParams } = require('./next-utils.config')
 const { esmExternals = false, tsconfigPath } = loadCustomBuildParams()
+const { i18n } = require('./next-i18next.config');
 
 module.exports = {
+  i18n,
+  serverRuntimeConfig: {
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  },
   experimental: {
     esmExternals,
   },
-  i18n,
+  trailingSlash: true,
   reactStrictMode: true,
   typescript: {
     tsconfigPath,
   },
   webpack: (config, { isServer }) => {
-    config.resolve.modules.push(path.resolve('./'));
-    if (isServer) {
-      config.plugins.push(
-        new CopyPlugin({
-          patterns: [
-            {
-              from: path.resolve(__dirname, 'README.md'),
-              to: path.resolve(__dirname, '.next/README.md'),
-            },
-            {
-              from: path.resolve(__dirname, 'README.IT.md'),
-              to: path.resolve(__dirname, '.next/README.IT.md'),
-            },
-            {
-              from: path.resolve(__dirname, 'README.EN.md'),
-              to: path.resolve(__dirname, '.next/README.EN.md'),
-            },
-          ],
-        })
-      );
+    if (!isServer) {
+      // 让 next-i18next 的客户端部分正常工作
+      config.resolve.fallback.intl_pluralrules = require.resolve('intl-pluralrules')
     }
     return config;
+  },
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.md$/,
+        use: 'raw-loader',
+      },
+    ],
   },
 };

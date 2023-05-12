@@ -37,7 +37,9 @@ Questo è un programma basato su Next.js che collega l'account pubblico WeChat a
    ```
 
 4. Sostituisci `your_app_id`,`your_app_secret`,`your_token`,`your_encoding_aes_key` e `your_openai_api_key` con i valori effettivi che hai ottenuto dalla [piattaforma per sviluppatori WeChat](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) e dalla chiave API di [OpenAI](https://platform.openai.com/account/api-keys).
+
 ![Piattaforma ufficiale di sviluppo dell'account WeChat](./public/images/weixin.jpg)
+
    Nota: nell'interfaccia di gestione dell'account pubblico WeChat, l'URL è l'indirizzo completo che inizia con l'indirizzo del tuo server, ad esempio http://yourdomain.com/api/wechat
 
 ## Istruzioni per l'esecuzione
@@ -119,6 +121,7 @@ Il file del database si trova in db \mysql_init.sql
    ```
 
 2. Carica la directory `.next` generata, il file `package.json` e il file `.env` sul server.
+
    ![Pubblicazione](./public/images/next.jpg)
 
 3. Sul server, esegui il seguente comando per installare le dipendenze.
@@ -140,7 +143,9 @@ Il file del database si trova in db \mysql_init.sql
 7. Accedi all'account pubblico WeChat e inizia a utilizzare il programma.
 
 8. Se riscontri problemi, utilizza lo strumento di debug dell'[account pubblico WeChat](https://mp.weixin.qq.com/debug).
+
 ![Strumento di debug](./public/images/wechat_debug.jpg)
+
 # Programma proxy di richiesta PHP
 Se il tuo server non supporta l'accesso esterno all'account pubblico WeChat, puoi utilizzare un programma proxy di richiesta PHP per inviare le richieste ricevute all'applicazione Next.js che supporta l'API.
 
