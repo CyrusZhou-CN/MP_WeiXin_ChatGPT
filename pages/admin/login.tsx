@@ -4,9 +4,19 @@ import { useTranslation } from 'next-i18next'; // 引入 useTranslation hook
 import { Header } from 'components/header';
 import { Footer } from 'components/footer';
 import { signIn, useSession } from 'next-auth/react';
+import syncModels from "db/sync-models";
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import { getStaticProps } from 'components/i18nServerSideProps';
-export { getStaticProps };
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+    locale = locale || 'cn';
+    await syncModels();
+    return {
+        props: {
+            ...await serverSideTranslations(locale, ['common', 'footer']),
+        },
+    };
+};
 
 const LoginPage = () => {
   const router = useRouter();

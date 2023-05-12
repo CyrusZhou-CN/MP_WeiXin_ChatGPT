@@ -5,6 +5,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import UserForm from './userForm';
+import UserPasswordForm from './userPasswordForm';
 const { confirm } = Modal;
 export default function UserPage({ }: any) {
     const { t } = useTranslation('admin');
@@ -13,7 +14,8 @@ export default function UserPage({ }: any) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [total, setTotal] = useState(0);
-
+    const [userid, setUserId] = useState('');
+    const [passwordVisible, setPasswordVisible] = useState(false);
     const [visible, setVisible] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [user, setUser] = useState<UserModel>();
@@ -61,6 +63,9 @@ export default function UserPage({ }: any) {
                     <Button type="primary" onClick={() => handleEdit(record)}>
                         {t('edit')}
                     </Button>
+                    <Button type="primary" onClick={() => handleUpdatePassword(record)}>
+                        {t('updatePassword')}
+                    </Button>
                     <Button type="dashed" onClick={() => handleDelete(record)}>
                         {t('delete')}
                     </Button>
@@ -76,21 +81,11 @@ export default function UserPage({ }: any) {
 
     const handleCreate = async (user: UserModel) => {
         try {
-            setConfirmLoading(true);
-            await fetch('/api/users', {
-                method: 'POST',
-                body: JSON.stringify(user),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            message.success(t('createSuccess'));
             filterUsers();
         } catch (error: any) {
             message.error(`${t('createFailed')}: ${t(error || 'Unknown error')}`);
         } finally {
             setVisible(false);
-            setConfirmLoading(false);
         }
     };
     const showModal = () => {
@@ -104,24 +99,21 @@ export default function UserPage({ }: any) {
         setUser(user);
         setVisible(true);
     };
+    const handleUpdatePassword = async (user: UserModel) => {
+        setUserId(user.id);
+        setPasswordVisible(true);
+    }
     const onUpdate = async (id: string, values: UserModel) => {
         try {
-            setConfirmLoading(true);
-            await fetch(`/api/users?id=${id}`, {
-                method: 'PUT',
-                body: JSON.stringify(values),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            message.success(t('editSuccess'));
             filterUsers();
         } catch (error: any) {
             message.error(`${t('editFailed')}: ${t(error || 'Unknown error')}`);
         } finally {
             setVisible(false);
-            setConfirmLoading(false);
         }
+    }
+    const onUpdatePassword = async (id: string) => {
+        setPasswordVisible(false);
     }
     const handleDelete = (user: UserModel) => {
         setConfirmLoading(true);
@@ -166,11 +158,11 @@ export default function UserPage({ }: any) {
 
     return (
         <><h1>{t('users')}</h1>
-        <Input.Search
-            value={search}
-            onChange={handleSearch}
-            placeholder={t('search') as string}
-            style={{ paddingRight: 16, marginBottom: 16, maxWidth: 400 }} />
+            <Input.Search
+                value={search}
+                onChange={handleSearch}
+                placeholder={t('search') as string}
+                style={{ paddingRight: 16, marginBottom: 16, maxWidth: 400 }} />
             <Button style={{ float: 'right', paddingRight: 16, marginBottom: 16 }}
                 type="primary"
                 onClick={showModal}
@@ -192,6 +184,9 @@ export default function UserPage({ }: any) {
                 onUpdate={onUpdate}
                 onCancel={handleHideModal}
                 user={user} />
+            <UserPasswordForm visible={passwordVisible}
+                onCancel={() => setPasswordVisible(false)}
+                userid={userid} onUpdate={onUpdatePassword} />
         </>
     );
 }

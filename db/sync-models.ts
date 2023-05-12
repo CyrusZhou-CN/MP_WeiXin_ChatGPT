@@ -10,9 +10,8 @@ const syncModels = async (): Promise<void> => {
   await ReplyCacheModel.sync({ force: false });
   await SystemLogModel.sync({ force: false });
   await User.sync({ force: false });
-  const adapter = SequelizeAdapter(sequelize);
+  SequelizeAdapter(sequelize);
   await sequelize.sync({ force: false });
-
   // Create default admin user
   const adminUser = await User.findOne({ where: { username: 'admin' } });
   if (!adminUser) {

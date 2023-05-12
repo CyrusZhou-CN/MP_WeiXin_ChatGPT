@@ -48,5 +48,9 @@
     "createSuccess": "Create success",
     "createFailed": "Create failed",
     "editSuccess": "Edit success",
-    "editFailed": "Edit failed"
+    "editFailed": "Edit failed",
+    "updatePassword": "Update password",
+    "updateUserPassword": "Update user password",
+    "username must be unique": "Username must be unique",
+    "data and salt arguments required": "data and salt arguments required"
 }

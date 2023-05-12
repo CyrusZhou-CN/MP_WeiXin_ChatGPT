@@ -48,5 +48,9 @@
     "createSuccess": "Creazione avvenuta con successo",
     "createFailed": "Creazione fallita",
     "editSuccess": "Modifica avvenuta con successo",
-    "editFailed": "Modifica fallita"
+    "editFailed": "Modifica fallita",
+    "updatePassword": "Aggiorna password",
+    "updateUserPassword": "Aggiorna password utente",
+    "username must be unique": "Nome utente non può essere unico!",
+    "data and salt arguments required": "Data e salt richiesti!"
 }

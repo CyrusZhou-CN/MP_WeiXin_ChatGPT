@@ -48,5 +48,9 @@
     "createSuccess": "创建成功",
     "createFailed": "创建失败",
     "editSuccess": "编辑成功",
-    "editFailed": "编辑失败"
+    "editFailed": "编辑失败",
+    "updatePassword": "修改密码",
+    "updateUserPassword": "更新用户密码",
+    "username must be unique": "用户名必须唯一",
+    "data and salt arguments required": "hash的data和saltOrRounds参数是必需的。"
 }

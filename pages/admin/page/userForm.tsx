@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Modal, Form, Input, Button, Space } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Form, Input, Button, Space, message } from 'antd';
 import { useTranslation } from 'next-i18next';
 
 interface UserFormProps {
@@ -13,6 +13,7 @@ interface UserFormProps {
 const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, onCancel }) => {
   const { t } = useTranslation("admin");
   const [form] = Form.useForm();
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -22,13 +23,50 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
     }
   }, [user, form]);
 
-  const onFinish = (values: any) => {
-    if (user) {
-      onUpdate(user.id, values);
-    } else {
-      onCreate(values);
+  const onFinish = async (values: any) => {
+    try {
+      setConfirmLoading(true);
+      if (user) {
+        const ruser = await fetch(`/api/users?id=${user.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(values),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const ruserJson = await ruser.json();
+        if (!ruserJson.error) {
+          message.success(t('editSuccess'));
+          onUpdate(user.id, await ruser.json());
+        } else {
+          message.error(`${t('editFailed')}:${t(ruserJson.message || 'Unknown error')}`);
+          return;
+        }
+        console.log('ruser:', ruser);
+      } else {
+        const ruser = await fetch('/api/users', {
+          method: 'POST',
+          body: JSON.stringify(values),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const ruserJson = await ruser.json();
+        if (!ruserJson.error) {
+          message.success(t('createSuccess'));
+          console.log('ruser:', ruser);
+          onCreate(ruserJson);
+        } else {
+          message.error(`${t('createFailed')}:${t(ruserJson.message || 'Unknown error')}`);
+          return;
+        }
+      }
+      form.resetFields();
+    } catch (error: any) {
+      message.error(`${t('createFailed')}: ${t(error || 'Unknown error')}`);
+    } finally {
+      setConfirmLoading(false);
     }
-    form.resetFields();
   };
 
   return (
@@ -48,10 +86,10 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
           <>
             <Form.Item
               name="password"
-              label={t('password')} 
+              label={t('password')}
               rules={[{ required: true, message: t('pleaseInputPassword') as string }]}
             >
-              <Input.Password autoComplete="new-password"/>
+              <Input.Password autoComplete="new-password" />
             </Form.Item>
             <Form.Item
               name="confirmPassword"
@@ -85,14 +123,14 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
           <Input readOnly />
         </Form.Item>
         <Form.Item>
-        <Space direction="horizontal" style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button type="primary" htmlType="submit">
-          {user ? t('update') : t('create')}
-        </Button>
-        <Button type="dashed" onClick={onCancel}>
-          {t('cancel')}
-        </Button>
-      </Space>
+          <Space direction="horizontal" style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button type="primary" htmlType="submit">
+              {user ? t('update') : t('create')}
+            </Button>
+            <Button type="dashed" onClick={onCancel}>
+              {t('cancel')}
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
     </Modal>
@@ -100,3 +138,4 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
 };
 
 export default UserForm;
+
