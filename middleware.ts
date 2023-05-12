@@ -16,10 +16,10 @@ export default async function middleware(req: NextRequest) {
     console.log("path:", path);
     console.log("session:", session);
 
-    if (!session && path.startsWith("/admin") && path !== "/admin/login") {
+    if (!session && /^\/admin(?!\/login)/.test(path)) {
         return NextResponse.redirect(new URL("/admin/login", req.url));
-    } else if (session && (path==="/admin/login" || path==="/admin")) {
+      } else if (session && /^\/admin\/?(?:login\/?)?$/.test(path)) {
         return NextResponse.redirect(new URL("/admin/dashboard", req.url));
-    }
+      }
     return NextResponse.next();
 }
