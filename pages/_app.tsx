@@ -18,8 +18,15 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps) =>
   const { i18n } = useTranslation();
   const router = useRouter();
   useEffect(() => {
+    const storedLang = localStorage.getItem('lang');
+    if (storedLang) {
+      router.push(router.asPath, router.asPath, { locale: storedLang });
+    }
+  }, []);
+  useEffect(() => {
     const handleLanguageChange = (lang: string) => {
       router.push(router.asPath, router.asPath, { locale: lang });
+      localStorage.setItem('lang', lang);
     };
 
     i18n.on('languageChanged', handleLanguageChange);
