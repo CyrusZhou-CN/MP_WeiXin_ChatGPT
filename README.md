@@ -155,6 +155,26 @@ npm test
 4. 在微信公众号管理后台中将服务配置为该 PHP 文件的 URL 地址。
 
 如果你使用的是 Vercel，需要注意 Vercel 的函数默认超时时间是 10 秒，而 ChatGPT 处理大量文本时可能会需要更长的时间，因此容易出错。因此，建议在自己的服务器上部署应用程序。
+
+# Vercel Postgres 数据库说明
+由于Vercel 不支持sqlite，Vercel提供了基于云的PostgreSQL数据库服务替代方案。
+
+登录后台点击[Storage](https://vercel.com/dashboard/stores)创建Postgres数据库
+
+设置Environment Variables
+
+Vercel Postgres 的链接配置可以在数据库的.env.local选项卡进行查看
+
+本项目的对应设置
+```
+DB_TYPE=postgres
+DB_HOST=POSTGRES_HOST
+DB_PORT=5432
+DB_USER=POSTGRES_USER
+DB_PASS=POSTGRES_PASSWORD
+DB_NAME=POSTGRES_DATABASE
+```
+
 # 后台管理
 后台地址:http://localhost:3000/admin
 

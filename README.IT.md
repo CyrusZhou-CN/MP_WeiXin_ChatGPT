@@ -161,6 +161,25 @@ Ecco come si usa:
 
 Se usi Vercel, devi tenere a mente che il tempo di timeout predefinito per le funzioni di Vercel è di 10 secondi e, quando ChatGPT elabora un grande volume di testo, potrebbe richiedere più tempo e generare un errore, quindi è preferibile distribuire l'applicazione sul proprio server.
 
+# Istruzioni per il database PostgreSQL di Vercel
+Poiché Vercel non supporta SQLite, offre un servizio di database PostgreSQL basato su cloud come soluzione alternativa.
+
+Crea un database PostgreSQL cliccando sulla scheda "Storage" dopo aver effettuato il login nel dashboard di Vercel.
+
+Imposta le variabili d'ambiente.
+
+La configurazione di connessione di PostgreSQL di Vercel può essere visualizzata nella scheda ".env.local" del database.
+
+Impostazioni corrispondenti per questo progetto:
+```
+DB_TYPE=postgres
+DB_HOST=POSTGRES_HOST
+DB_PORT=5432
+DB_USER=POSTGRES_USER
+DB_PASS=POSTGRES_PASSWORD
+DB_NAME=POSTGRES_DATABASE
+```
+
 # Gestione backend
 Indirizzo di backend: http://localhost:3000/admin
 
