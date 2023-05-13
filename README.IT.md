@@ -1,5 +1,10 @@
 [中文](README.md) | [English](README.EN.md)
 
+
+# Inizio rapido
+
+[![Crea database Postgres Vercel](./public/images/postgreSQL.png)](https://vercel.com/cyruszhou-cn/mp-wei-xin-chat-gpt/stores)   [![Deploy con Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FCyrusZhou-CN%2FMP_WeiXin_ChatGPT&env=OPENAI_API_KEY&env=APP_ID&env=APP_SECRET&env=TOKEN&env=NEXTAUTH_URL&env=DB_TYPE&env=DB_HOST&env=DB_PORT&env=DB_USER&env=DB_PASS&env=DB_NAME&repository-name=MP_WeiXin_ChatGPT)  [![Apri in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/CyrusZhou-CN/MP_WeiXin_ChatGPT)
+
 # Collegamento dell'account pubblico WeChat al programma ChatGPT
 
 Questo è un programma basato su Next.js che collega l'account pubblico WeChat al programma ChatGPT. Puoi fare domande direttamente a ChatGPT e ricevere risposte attraverso l'account pubblico WeChat.

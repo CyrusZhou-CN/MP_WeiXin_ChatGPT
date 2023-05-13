@@ -10,6 +10,7 @@ import syncModels from "db/sync-models";
 import weixinImage from "../public/images/weixin.jpg";
 import wechatDebugImage from "../public/images/wechat_debug.jpg";
 import nextImage from "../public/images/next.jpg";
+import postgreImage from "../public/images/postgreSQL.png";
 import { README_md, README_IT_md, README_EN_md } from "../db/readme";
 const components = {
   img: (image: any) => {
@@ -24,8 +25,11 @@ const components = {
     if (image.src.includes('next.jpg')) {
       return <Image src={nextImage} alt={image.alt} />
     }
+    if (image.src.includes('postgreSQL.png')) {
+      return <Image src={postgreImage} alt={image.alt} />
+    }
     let src = image.src
-    return <Image src={src} alt={image.alt} />
+    return <img src={src} alt={image.alt} />
   },
   a: ({ href, children }: any) => {
     let target = '_blank';

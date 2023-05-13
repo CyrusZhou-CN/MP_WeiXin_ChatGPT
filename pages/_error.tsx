@@ -1,14 +1,12 @@
 import { Component } from 'react';
 import Layout from '../components/layout';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 class Error extends Component {
-    static getInitialProps({ res, err,locale }: any) {
+    static getInitialProps({ res, err }: any) {
         const statusCode = res ? res.statusCode : err ? err.statusCode : null;
         const message = err ? err.message : '';
-        const router = useRouter();
-        const previousPageURL = router.query.from as string || '/';
+        const previousPageURL = '/';
         return { statusCode, message, previousPageURL };
     }
 

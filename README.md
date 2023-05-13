@@ -1,5 +1,9 @@
 [Italiano](README.IT.md) | [English](README.EN.md)
 
+# 快速开始
+
+[![创建Vercel Postgres数据库](./public/images/postgreSQL.png)](https://vercel.com/cyruszhou-cn/mp-wei-xin-chat-gpt/stores)   [![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FCyrusZhou-CN%2FMP_WeiXin_ChatGPT&env=OPENAI_API_KEY&env=APP_ID&env=APP_SECRET&env=TOKEN&env=NEXTAUTH_URL&env=DB_TYPE&env=DB_HOST&env=DB_PORT&env=DB_USER&env=DB_PASS&env=DB_NAME&repository-name=MP_WeiXin_ChatGPT)  [![在 Gitpod 中打开](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/CyrusZhou-CN/MP_WeiXin_ChatGPT)
+
 # 微信公众号对接ChatGPT程序
 
 这是一个基于 Next.js 开发的微信公众号对接 ChatGPT 程序，可以通过微信公众号直接向 ChatGPT 提问并获取答案。

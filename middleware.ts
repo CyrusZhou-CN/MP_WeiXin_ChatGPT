@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export default async function middleware(req: NextRequest) {
   // Get the pathname of the request (e.g. /, /protected)
   const path = req.nextUrl.pathname;
-  const [language] = path.substr(1).split("/");
+  const locale = typeof localStorage !== 'undefined' ? localStorage.getItem('lang') : "cn";
 
   // If it's the root path, just render it
   if (path === "/") {
@@ -19,9 +19,9 @@ export default async function middleware(req: NextRequest) {
   console.log("req:", req);
 
   if (!session && /^\/admin(?!\/login)/.test(path)) {
-    return NextResponse.redirect(new URL(`/${language}/auth/login`, req.url));
+    return NextResponse.redirect(new URL(`/${locale}/auth/login`, req.url));
   } else if (session && /^\/admin\/?(?:login\/?)?$/.test(path)) {
-    return NextResponse.redirect(new URL(`/${language}/admin/dashboard`, req.url));
+    return NextResponse.redirect(new URL(`/${locale}/admin/dashboard`, req.url));
   }
   return NextResponse.next();
 }
