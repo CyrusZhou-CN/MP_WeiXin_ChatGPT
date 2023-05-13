@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { getStaticProps } from 'components/i18nServerSideProps';
 import { useRouter } from "next/router";
 export { getStaticProps };
-export default function Custom404() {
+export default function Custom404({ locale }: any) {
   const { t } = useTranslation();
   const router = useRouter();
   // 获取上一个页面的 URL
   console.log('router.query:',JSON.stringify(router.query));
-  const previousPageURL = router.query.from as string || '/';
+  const previousPageURL = router.query.from as string || `/${locale}`;
   return (
     <>
       <Layout heading={t('heading')} title={t('title')} >
