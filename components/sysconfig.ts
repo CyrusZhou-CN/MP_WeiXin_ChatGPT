@@ -16,6 +16,7 @@ interface SysConfig {
     dbDatabase: string;
     dbType: string;
     jwtSecret: string;
+    isVercel: boolean;
   }
 
 
@@ -36,7 +37,8 @@ const sysconfig: SysConfig = {
   dbPassword : process.env.DB_PASS || '',
   dbDatabase : process.env.DB_NAME || '',
   dbType : process.env.DB_TYPE || 'mysql',
-  jwtSecret : process.env.JWT_SECRET|| 'default-secret'
+  jwtSecret : process.env.JWT_SECRET|| 'default-secret',
+  isVercel: false
 };
 if (process.env.OPENAI_TIMEOUT !== undefined && /^\d+$/.test(process.env.OPENAI_TIMEOUT)) {
   sysconfig.openaiTimeout = parseInt(process.env.OPENAI_TIMEOUT);
@@ -47,6 +49,10 @@ if (process.env.DB_PORT !== undefined && /^\d+$/.test(process.env.DB_PORT)) {
 
 if (process.env.IS_AUTHENTICATED !== undefined && process.env.IS_AUTHENTICATED.toLowerCase() === 'true') {
   sysconfig.isAuthenticated = true;
+}
+
+if (process.env.VERCEL !== undefined && process.env.VERCEL.toLowerCase() === 'true') {
+  sysconfig.isVercel = true;
 }
 
 export default sysconfig;

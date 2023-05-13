@@ -34,6 +34,7 @@
    MYSQL_USER=weixin
    MYSQL_PASSWORD=weixin
    MYSQL_DATABASE=weixin
+   VERCEL=false
    ```
 
 4. 将以上配置参数中的 `your_app_id`、`your_app_secret`、`your_token`、`your_encoding_aes_key` 和 `your_openai_api_key` 分别替换为通过 [公众号开发者平台](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) 获取的实际参数值和 [OpenAI API Key](https://platform.openai.com/account/api-keys)。

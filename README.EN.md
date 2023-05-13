@@ -34,6 +34,7 @@ This is a ChatGPT program that integrates with WeChat Official Account, which al
    MYSQL_USER=weixin
    MYSQL_PASSWORD=weixin
    MYSQL_DATABASE=weixin
+   VERCEL=false
    ```
    
 4. Replace `your_app_id`, `your_app_secret`, `your_token`, `your_encoding_aes_key`, and `your_openai_api_key` with actual parameter values obtained from [WeChat Official Account Developer Platform](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) and [OpenAI API Key](https://platform.openai.com/account/api-keys).

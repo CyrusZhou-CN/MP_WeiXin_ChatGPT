@@ -2,6 +2,7 @@ import { FC, useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 import { BackTop, Layout } from 'antd';
 import { Analytics } from '@vercel/analytics/react';
+import sysconfig from './sysconfig';
 const { Footer: AntFooter } = Layout;
 
 export const Footer: FC = () => {
@@ -14,7 +15,7 @@ export const Footer: FC = () => {
         <p style={{ margin: 0 }}>{t('description')}</p>
         <BackTop style={{ bottom: 50 }} />
       </AntFooter>
-      <Analytics />
+      {sysconfig?.isVercel && <Analytics />}
     </>
   );
 };

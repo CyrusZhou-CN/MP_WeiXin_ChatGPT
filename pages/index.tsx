@@ -5,8 +5,7 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { GetStaticProps } from "next/types";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import { Footer } from "../components/footer";
-import { Header } from "../components/header";
+import  Layout  from "../components/layout";
 import syncModels from "db/sync-models";
 import weixinImage from "../public/images/weixin.jpg";
 import wechatDebugImage from "../public/images/wechat_debug.jpg";
@@ -61,9 +60,7 @@ const HomePage = ({ markdown }: Props) => {
 
   return (
     <>
-      <Header heading={t('heading')} title={t('title')} />
-      <div className="container">
-        <div className="content">
+      <Layout heading={t('heading')} title={t('title')} >
           <ReactMarkdown
             className={markdownStyles["markdown"]}
             children={markdown}
@@ -71,9 +68,7 @@ const HomePage = ({ markdown }: Props) => {
             skipHtml={false}
             sourcePos={true}
           />
-        </div>
-      </div>
-      <Footer />
+      </Layout>
     </>
   );
 };

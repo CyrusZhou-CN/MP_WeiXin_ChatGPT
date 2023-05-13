@@ -34,6 +34,7 @@ Questo è un programma basato su Next.js che collega l'account pubblico WeChat a
    MYSQL_USER=weixin
    MYSQL_PASSWORD=weixin
    MYSQL_DATABASE=weixin
+   VERCEL=false
    ```
 
 4. Sostituisci `your_app_id`,`your_app_secret`,`your_token`,`your_encoding_aes_key` e `your_openai_api_key` con i valori effettivi che hai ottenuto dalla [piattaforma per sviluppatori WeChat](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) e dalla chiave API di [OpenAI](https://platform.openai.com/account/api-keys).
