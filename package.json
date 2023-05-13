@@ -14,6 +14,7 @@
     "test": "docker-compose up -d db && wait-on tcp:localhost:6306 && jest --detectOpenHandles"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.0.1",
     "antd": "^5.4.7",
     "bcrypt": "^5.1.0",
     "classnames": "^2.3.2",

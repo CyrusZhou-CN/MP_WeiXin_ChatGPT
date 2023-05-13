@@ -60,9 +60,10 @@ export default function ServerDashboardPage({ }: any) {
 }
 
 export const getServerSideProps = async ({ locale }: any) => {
+  locale = locale || 'cn';
   return {
     props: {
-      ...(await serverSideTranslations(locale || "cn", ['common', 'footer', 'admin'])),
+      ...(await serverSideTranslations(locale, ['common', 'footer', 'admin'])),
     },
   };
 };
