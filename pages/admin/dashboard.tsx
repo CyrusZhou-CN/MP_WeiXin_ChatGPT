@@ -7,9 +7,19 @@ import { Layout, Menu } from 'antd';
 import ReplyCachePage from '../../components/page/replyCachePage';
 import SystemLogPage from '../../components/page/systemLogPage';
 import UserPage from '../../components/page/userPage';
+import { GetStaticProps } from 'next';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  locale = locale || 'cn';
+  return {
+      props: {
+          ...await serverSideTranslations(locale, ['common', 'footer', 'admin']),
+      },
+  };
+};
 
 export default function ServerDashboardPage({ }: any) {
   const { t } = useTranslation('admin');
@@ -58,12 +68,3 @@ export default function ServerDashboardPage({ }: any) {
     </>
   );
 }
-
-export const getServerSideProps = async ({ locale }: any) => {
-  locale = locale || 'cn';
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common', 'footer', 'admin'])),
-    },
-  };
-};
