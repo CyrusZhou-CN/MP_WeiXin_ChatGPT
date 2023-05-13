@@ -17,7 +17,7 @@ export default async function middleware(req: NextRequest) {
     console.log("session:", session);
 
     if (!session && /^\/admin(?!\/login)/.test(path)) {
-        return NextResponse.redirect(new URL("/admin/login", req.url));
+        return NextResponse.redirect(new URL("/auth/login", req.url));
       } else if (session && /^\/admin\/?(?:login\/?)?$/.test(path)) {
         return NextResponse.redirect(new URL("/admin/dashboard", req.url));
       }
