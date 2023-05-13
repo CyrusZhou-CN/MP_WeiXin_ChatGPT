@@ -10,20 +10,41 @@ let sequelizeOptions: any = {
     writeToFile('sequelize', msg)
   }
 };
-if (sysconfig.dbType === 'sqlite') {
-  sequelizeOptions = {
-    ...sequelizeOptions,
-    storage: 'database.sqlite',
-  };
-} else {
-  sequelizeOptions = {
-    ...sequelizeOptions,
-    host: sysconfig.dbHost,
-    username: sysconfig.dbUserName,
-    password: sysconfig.dbPassword,
-    database: sysconfig.dbDatabase,
-    port: sysconfig.dbPort,
-  };
+switch (sysconfig.dbType) {
+  case 'sqlite':
+    sequelizeOptions = {
+      ...sequelizeOptions,
+      storage: 'database.sqlite',
+    };
+    break;
+  case 'postgres':
+    sequelizeOptions = {
+      ...sequelizeOptions,
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      },
+      ssl: true,
+      protocol: "postgres",
+      host: sysconfig.dbHost,
+      username: sysconfig.dbUserName,
+      password: sysconfig.dbPassword,
+      database: sysconfig.dbDatabase,
+      port: sysconfig.dbPort,
+    };
+    break;
+  default:
+    sequelizeOptions = {
+      ...sequelizeOptions,
+      host: sysconfig.dbHost,
+      username: sysconfig.dbUserName,
+      password: sysconfig.dbPassword,
+      database: sysconfig.dbDatabase,
+      port: sysconfig.dbPort,
+    };
+    break;
 }
 
 // 创建 Sequelize 实例

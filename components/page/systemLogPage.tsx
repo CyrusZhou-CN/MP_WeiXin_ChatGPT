@@ -1,16 +1,7 @@
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
 import { Input, Table } from 'antd';
 import { SystemLogModel } from 'db/models';
 import { useEffect, useState } from 'react';
-
-export const getServerSideProps = async ({ locale }: any) => {
-    return {
-        props: {
-            ...await serverSideTranslations(locale, ['common', 'footer', 'admin'])
-        },
-    };
-};
 
 export default function SystemLogPage({ }) {
     const { t } = useTranslation('admin');

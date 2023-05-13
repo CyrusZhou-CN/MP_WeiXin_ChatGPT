@@ -4,9 +4,9 @@ import { Header } from 'components/header';
 import { Footer } from 'components/footer';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Layout, Menu } from 'antd';
-import ReplyCachePage from './page/replyCachePage';
-import SystemLogPage from './page/systemLogPage';
-import UserPage from './page/userPage';
+import ReplyCachePage from '../../components/page/replyCachePage';
+import SystemLogPage from '../../components/page/systemLogPage';
+import UserPage from '../../components/page/userPage';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -24,7 +24,7 @@ export default function ServerDashboardPage({ }: any) {
   return (
     <>
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider style={{color:'#000000', backgroundColor: '#ffffff', marginTop: '80px', height: `calc(100vh - 80px)`, position: 'absolute', left: 0, zIndex: 1 }}>
+        <Sider style={{ color: '#000000', backgroundColor: '#ffffff', marginTop: '80px', height: `calc(100vh - 80px)`, position: 'absolute', left: 0, zIndex: 1 }}>
           <Menu mode="inline" theme="dark" defaultOpenKeys={['cache', 'logs']}>
             <Menu.Item key="dashboard" onClick={() => handleMenuClick('dashboard')}>
               {t('dashboard')}
@@ -62,7 +62,7 @@ export default function ServerDashboardPage({ }: any) {
 export const getServerSideProps = async ({ locale }: any) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ['common', 'footer', 'admin'])),
+      ...(await serverSideTranslations(locale || "cn", ['common', 'footer', 'admin'])),
     },
   };
 };

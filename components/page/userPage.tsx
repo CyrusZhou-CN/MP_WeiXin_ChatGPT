@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Table, Input, Modal, Form, message, Button, Space } from 'antd';
-import { UserModel } from '../../../db/models';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { UserModel } from '../../db/models';
 import { useTranslation } from 'next-i18next';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import UserForm from './userForm';
@@ -190,11 +189,3 @@ export default function UserPage({ }: any) {
         </>
     );
 }
-
-export const getServerSideProps = async ({ locale }: any) => {
-    return {
-        props: {
-            ...(await serverSideTranslations(locale, ['common', 'footer', 'admin'])),
-        },
-    };
-};

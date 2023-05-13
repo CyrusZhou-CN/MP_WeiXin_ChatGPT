@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, Input, Space,Modal, Table, message } from 'antd';
-import { ReplyCacheModel } from '../../../db/models';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { Button, Input, Space, Modal, Table, message } from 'antd';
+import { ReplyCacheModel } from '../../db/models';
 import { useTranslation } from 'next-i18next';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
@@ -139,10 +138,3 @@ export default function ReplyCachePage({ }: any) {
         </>
     );
 }
-export const getServerSideProps = async ({ locale }: any) => {
-    return {
-        props: {
-            ...await serverSideTranslations(locale, ['common', 'footer', 'admin'])
-        },
-    };
-};
