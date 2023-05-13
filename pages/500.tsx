@@ -9,7 +9,7 @@ export default function Custom500({ locale }: any) {
   const { t } = useTranslation();
   const router = useRouter();
   // 获取上一个页面的 URL
-  const previousPageURL = router.query.from as string || `/${locale}`;
+  const previousPageURL = router.query.from as string || '/';
   return (
     <>
       <Layout heading={t('heading')} title={t('title')} >

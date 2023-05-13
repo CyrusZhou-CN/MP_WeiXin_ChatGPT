@@ -8,7 +8,7 @@ class Error extends Component {
         const statusCode = res ? res.statusCode : err ? err.statusCode : null;
         const message = err ? err.message : '';
         const router = useRouter();
-        const previousPageURL = router.query.from as string || `/${locale}`;
+        const previousPageURL = router.query.from as string || '/';
         return { statusCode, message, previousPageURL };
     }
 
