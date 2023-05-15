@@ -32,13 +32,13 @@ export const Header: FC<Props> = ({ heading, title }) => {
             theme="dark" mode="horizontal" defaultSelectedKeys={[]}>
             <Menu.Item key="1"><LanguageSelect /></Menu.Item>
             {status === "authenticated" && (
-              <Menu.SubMenu key="sub1" icon={session?.user?.image} title={session?.user?.name}>
-                <Menu.Item  key="3" icon={<LogoutOutlined />} onClick={() => signOut()}>{t('Sign Out')}</Menu.Item>
+              <Menu.SubMenu key="sub1" icon={session?.user?.image} title={session?.user?.name || "error"}>
+                <Menu.Item key="3" icon={<LogoutOutlined />} onClick={() => signOut()}>{t('Sign Out')}</Menu.Item>
               </Menu.SubMenu>
             )}
             <Menu.Item key="2" >
               <a href="https://github.com/CyrusZhou-CN/MP_WeiXin_ChatGPT" target="_blank" rel="noopener noreferrer">{<GithubOutlined />}</a>
-            </Menu.Item>            
+            </Menu.Item>
           </Menu>
         </AntdHeader>
       </div>

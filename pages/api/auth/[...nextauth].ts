@@ -15,6 +15,7 @@ export default NextAuth({
           password: string;
         };
         if (!username || !password) {
+          console.log( 'Missing username or password');
           SystemLog.Log('error', 'Missing username or password');
           throw Error("Missing username or password");
         }
@@ -29,10 +30,11 @@ export default NextAuth({
             SystemLog.Log('error', 'Invalid username or password');
             throw Error("Invalid username or password");
           }
+          console.log( `Successfully logged in as ${username}`);
           SystemLog.Log('info', `Successfully logged in as ${username}`);
           return { id: user.id, name: user.name };
         } catch (error: any) {
-          console.log('authorize error:', error)          
+          console.log('authorize error:', error);
           SystemLog.Log('error', error.message);
           throw Error(error.message);
         }
