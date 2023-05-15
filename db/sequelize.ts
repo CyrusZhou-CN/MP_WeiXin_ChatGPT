@@ -49,6 +49,5 @@ switch (sysconfig.dbType) {
 
 // 创建 Sequelize 实例
 const sequelize = new Sequelize(sequelizeOptions);
-
 // 导出 sequelize 实例
 export default sequelize;

@@ -32,6 +32,7 @@ export default NextAuth({
           SystemLog.Log('info', `Successfully logged in as ${username}`);
           return { id: user.id, name: user.name };
         } catch (error: any) {
+          console.log('authorize error:', error)          
           SystemLog.Log('error', error.message);
           throw Error(error.message);
         }
