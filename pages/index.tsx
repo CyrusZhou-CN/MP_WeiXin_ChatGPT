@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { GetStaticProps } from "next/types";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import  Layout  from "../components/layout";
+import Layout from "../components/layout";
 import syncModels from "db/sync-models";
 import weixinImage from "../public/images/weixin.jpg";
 import wechatDebugImage from "../public/images/wechat_debug.jpg";
@@ -29,6 +29,7 @@ const components = {
       return <Image src={postgreImage} alt={image.alt} />
     }
     let src = image.src
+    {/* eslint-disable-next-line @next/next/no-img-element */}
     return <img src={src} alt={image.alt} />
   },
   a: ({ href, children }: any) => {
@@ -65,20 +66,20 @@ const HomePage = ({ markdown }: Props) => {
   return (
     <>
       <Layout heading={t('heading')} title={t('title')} >
-          <ReactMarkdown
-            className={markdownStyles["markdown"]}
-            children={markdown}
-            components={components}
-            skipHtml={false}
-            sourcePos={true}
-          />
+        <ReactMarkdown
+          className={markdownStyles["markdown"]}
+          components={components}
+          skipHtml={false}
+          sourcePos={true}
+        >{markdown}
+        </ReactMarkdown>
       </Layout>
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  await syncModels();  
+  await syncModels();
   console.log('locale', locale);
   const translations = await serverSideTranslations(locale ?? 'cn', [
     'common',
@@ -94,7 +95,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
         markdown = README_IT_md;
         break;
       case "en":
-        markdown = README_EN_md;        
+        markdown = README_EN_md;
         break;
       default:
         markdown = README_md;

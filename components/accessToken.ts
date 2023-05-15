@@ -62,5 +62,7 @@ export const getAccessToken = async (): Promise<string> => {
 
   return readAccessToken() || "";
 };
-
-export default { getAccessToken };
+const getAccess =  {
+  getAccessToken
+}
+export default getAccess;

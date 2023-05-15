@@ -39,7 +39,7 @@ const getReply = async (text: string): Promise<string> => {
     return error.message || '没有找到答案，请问其他问题吧！';
   }
 };
-
-export default {
+const aichat = {
   getReply
-};
+}
+export default aichat;

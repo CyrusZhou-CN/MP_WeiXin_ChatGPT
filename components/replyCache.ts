@@ -18,5 +18,6 @@ export class ReplyCache {
     };
     findAll = () => ReplyCacheModel.findAll();
 }
+const replyCache = new ReplyCache();
 
-export default new ReplyCache();
+export default replyCache;

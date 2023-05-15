@@ -22,7 +22,9 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps) =>
     if (storedLang) {
       router.push(router.asPath, router.asPath, { locale: storedLang });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
     const handleLanguageChange = (lang: string) => {
       router.push(router.asPath, router.asPath, { locale: lang });
@@ -41,4 +43,7 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps) =>
     </SessionProvider>
   )
 }
-export default appWithTranslation(MyApp);
+
+const MyAppWithTranslation = appWithTranslation(MyApp);
+
+export default MyAppWithTranslation;

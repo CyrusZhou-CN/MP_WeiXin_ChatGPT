@@ -176,7 +176,7 @@ async function handleSubscribeEvent(xml: any, res: NextApiResponse): Promise<voi
   const message: Message = { FromUserName: xml.fromusername, ToUserName: xml.tousername, reply: sysconfig.subscribeReply };
   res.send(textMessage(message).toString());
 }
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const wechat = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
   const { signature, timestamp, nonce, echostr, encrypt_type, msg_signature } = req.query;
   const sMsgTimestamp = timestamp as string;
@@ -238,3 +238,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break;
   }
 };
+
+export default wechat;
