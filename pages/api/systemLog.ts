@@ -3,7 +3,7 @@ import { SystemLogModel } from "db/models";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Op } from "sequelize";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const systemLog = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method, query, body } = req;
 
     switch (method) {
@@ -55,3 +55,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             res.status(405).end(`Method ${method} Not Allowed`);
     }
 }
+
+export default systemLog

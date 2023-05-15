@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { Input, Table } from 'antd';
 import { SystemLogModel } from 'db/models';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function SystemLogPage({ }) {
     const { t } = useTranslation('admin');
@@ -48,16 +48,17 @@ export default function SystemLogPage({ }) {
         setSearch(e.target.value);
         setPage(1);
     };
-    const filterUsers = async () => {
+    const filterUsers = useCallback(async () => {
         const url = `/api/systemLog?search=${search}&page=${page}&limit=${pageSize}`;
         const response = await fetch(url);
         const { data, total } = await response.json();
         setTotal(total);
         setSystemLog(data);
-    };
+    }, [search, page, pageSize]);
+    
     useEffect(() => {
         filterUsers();
-    }, [search, page, pageSize]);
+    }, [search, page, pageSize,filterUsers]);
     return (
         <>
             <h1>{t('systemLog')}</h1>

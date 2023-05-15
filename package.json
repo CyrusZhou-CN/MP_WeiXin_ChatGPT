@@ -10,7 +10,7 @@
     "build": "rimraf .next && next build",
     "start": "next start",
     "clean": "npm cache clear --force && rimraf package-lock.json pnpm-lock.yaml node_modules .next",
-    "lint": "eslint .",
+    "lint": "next lint",
     "test": "docker-compose up -d db && wait-on tcp:localhost:6306 && jest --detectOpenHandles"
   },
   "dependencies": {
@@ -62,6 +62,7 @@
     "dotenv": "^16.0.3",
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.38.0",
+    "eslint-config-next": "13.4.2",
     "fs": "0.0.1-security",
     "jest": "^29.5.0",
     "js-base64": "^3.7.5",

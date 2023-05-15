@@ -3,8 +3,10 @@ require('dotenv').config();
 const { loadCustomBuildParams } = require('./next-utils.config')
 const { esmExternals = false, tsconfigPath } = loadCustomBuildParams()
 const { i18n } = require('./next-i18next.config');
-
-module.exports = {
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
   i18n,
   serverRuntimeConfig: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
@@ -35,4 +37,5 @@ module.exports = {
       },
     ],
   },
-};
+}
+module.exports = nextConfig;

@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Op } from "sequelize";
 import SystemLog from "components/systemLog";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const replyCache = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method, query, body } = req;
 
     switch (method) {
@@ -54,7 +54,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         case 'DELETE':
             // 删除指定数据
             const { id: dataId } = query;
-            ReplyCacheModel.destroy({ where: { id:dataId } })
+            ReplyCacheModel.destroy({ where: { id: dataId } })
                 .then(() => res.send('Data deleted'))
                 .catch((err) => {
                     res.status(500).send(err);
@@ -67,3 +67,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             SystemLog.Log('error', `Method ${method} Not Allowed`);
     }
 }
+
+export default replyCache

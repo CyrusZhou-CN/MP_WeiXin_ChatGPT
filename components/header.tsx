@@ -5,6 +5,7 @@ import { Avatar, Layout, Menu } from 'antd';
 import { UserOutlined, LogoutOutlined, GithubOutlined } from '@ant-design/icons';
 import LanguageSelect from './languageSelect';
 import { signOut, useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 
 const { Header: AntdHeader } = Layout;
 
@@ -14,6 +15,8 @@ type Props = {
 }
 
 export const Header: FC<Props> = ({ heading, title }) => {
+  const { t } = useTranslation('common');
+
   const { status, data: session } = useSession();
   return (
     <>
@@ -30,7 +33,7 @@ export const Header: FC<Props> = ({ heading, title }) => {
             <Menu.Item key="1"><LanguageSelect /></Menu.Item>
             {status === "authenticated" && (
               <Menu.SubMenu key="sub1" icon={session?.user?.image} title={session?.user?.name}>
-                <Menu.Item  key="3" icon={<LogoutOutlined />} onClick={() => signOut()}>Sign out</Menu.Item>
+                <Menu.Item  key="3" icon={<LogoutOutlined />} onClick={() => signOut()}>{t('Sign Out')}</Menu.Item>
               </Menu.SubMenu>
             )}
             <Menu.Item key="2" >

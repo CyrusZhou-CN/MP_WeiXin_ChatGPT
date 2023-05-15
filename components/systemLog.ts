@@ -22,5 +22,5 @@ export class SystemLog {
     findAll = () => SystemLogModel.findAll();
     findById = (id: number) => SystemLogModel.findByPk(id);
 }
-
-export default new SystemLog();
+const systemLog = new SystemLog();
+export default systemLog;

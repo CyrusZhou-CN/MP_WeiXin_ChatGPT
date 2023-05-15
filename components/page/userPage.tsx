@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Table, Input, Modal, Form, message, Button, Space } from 'antd';
 import { UserModel } from '../../db/models';
 import { useTranslation } from 'next-i18next';
@@ -6,7 +6,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import UserForm from './userForm';
 import UserPasswordForm from './userPasswordForm';
 const { confirm } = Modal;
-export default function UserPage({ }: any) {
+const UserPage = ({ }: any) => {
     const { t } = useTranslation('admin');
     const [users, setUsers] = useState<UserModel[]>([]);
     const [search, setSearch] = useState('');
@@ -140,7 +140,7 @@ export default function UserPage({ }: any) {
             },
         });
     }
-    const filterUsers = async () => {
+    const filterUsers = useCallback(async () => {
         setConfirmLoading(true);
         const url = `/api/users?search=${search}&page=${page}&limit=${pageSize}`;
         const response = await fetch(url);
@@ -148,12 +148,12 @@ export default function UserPage({ }: any) {
         setTotal(total);
         setUsers(data);
         setConfirmLoading(false);
-    };
+    }, [search, page, pageSize]);
     useEffect(() => {
         setConfirmLoading(true);
         filterUsers();
         setConfirmLoading(false);
-    }, [search, page, pageSize]);
+    }, [search, page, pageSize, filterUsers]);
 
     return (
         <><h1>{t('users')}</h1>
@@ -189,3 +189,5 @@ export default function UserPage({ }: any) {
         </>
     );
 }
+
+export default UserPage;

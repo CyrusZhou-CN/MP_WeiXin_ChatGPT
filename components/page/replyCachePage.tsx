@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, Input, Space, Modal, Table, message } from 'antd';
 import { ReplyCacheModel } from '../../db/models';
 import { useTranslation } from 'next-i18next';
@@ -105,16 +105,16 @@ export default function ReplyCachePage({ }: any) {
         setSearch(e.target.value);
         setPage(1);
     };
-    const filterUsers = async () => {
+    const filterUsers = useCallback(async () => {
         const url = `/api/replyCache?search=${search}&page=${page}&limit=${pageSize}`;
         const response = await fetch(url);
         const { data, total } = await response.json();
         setTotal(total);
         setReplyCache(data);
-    };
+    }, [search, page, pageSize]);
     useEffect(() => {
         filterUsers();
-    }, [search, page, pageSize]);
+    }, [search, page, pageSize, filterUsers]);
     return (
         <>
             <h1>{t('replyCache')}</h1>

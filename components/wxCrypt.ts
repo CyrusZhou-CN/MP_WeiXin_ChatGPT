@@ -18,4 +18,11 @@ export const genResponseId=(seed: string)=> {
   .substr(0, 4); // 生成 4 位随机数
 }
 export const wxBizMsgCrypt=new WXBizMsgCrypt(sysconfig.token,sysconfig.encodingAESKey,sysconfig.appID);
-export default { wxBizMsgCrypt, genSignature, genResponseId};
+
+const exportedObject = {
+  wxBizMsgCrypt,
+  genSignature,
+  genResponseId
+};
+
+export default exportedObject;

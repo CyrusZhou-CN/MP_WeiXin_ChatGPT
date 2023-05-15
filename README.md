@@ -186,4 +186,5 @@ DB_NAME=POSTGRES_DATABASE
 用户名/密码：admin/admin
 # 待解决
 认证公众号内容主动发送未测试
+
 安全模式加密回复未解决，目前只支持 兼容模式 、 明文模式
