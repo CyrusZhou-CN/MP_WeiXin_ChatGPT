@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import i18n from '../components/i18n' // 导入你的 i18n 配置
 import { initReactI18next } from 'react-i18next';
+import { Session } from 'next-auth';
 
 // 初始化 react-i18next
 i18n.use(initReactI18next).init({
@@ -14,7 +15,7 @@ i18n.use(initReactI18next).init({
   lng: 'cn',
   debug: process.env.NODE_ENV === 'development'
 })
-const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
+const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps<{ session: Session }>) => {
   const { i18n } = useTranslation();
   const router = useRouter();
   useEffect(() => {

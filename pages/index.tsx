@@ -29,7 +29,7 @@ const components = {
       return <Image src={postgreImage} alt={image.alt} />
     }
     let src = image.src
-    {/* eslint-disable-next-line @next/next/no-img-element */}
+    {/* eslint-disable-next-line @next/next/no-img-element */ }
     return <img src={src} alt={image.alt} />
   },
   a: ({ href, children }: any) => {
@@ -62,7 +62,6 @@ type Props = {
 }
 const HomePage = ({ markdown }: Props) => {
   const { t } = useTranslation();
-
   return (
     <>
       <Layout heading={t('heading')} title={t('title')} >
@@ -79,8 +78,7 @@ const HomePage = ({ markdown }: Props) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  await syncModels();
-  console.log('locale', locale);
+  await syncModels();  
   const translations = await serverSideTranslations(locale ?? 'cn', [
     'common',
     'footer',
