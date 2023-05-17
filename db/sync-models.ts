@@ -5,7 +5,7 @@ import ReplyCacheModel from './models/reply_cache';
 import SequelizeAdapter from '@next-auth/sequelize-adapter';
 import User from './models/user';
 import { hash } from 'bcrypt';
-
+export const adapter =  SequelizeAdapter(sequelize);
 const syncModels = async (): Promise<void> => {
   await ReplyCacheModel.sync({ force: false });
   await SystemLogModel.sync({ force: false });

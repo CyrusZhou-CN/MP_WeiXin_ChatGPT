@@ -4,11 +4,10 @@ import { compare } from "bcrypt";
 import User from "db/models/user";
 import SystemLog from "components/systemLog";
 import { NextApiRequest, NextApiResponse } from "next";
-import SequelizeAdapter from "@next-auth/sequelize-adapter";
-import sequelize from 'db/sequelize';
+import { adapter } from "db/sync-models";
 
 const options: AuthOptions = {  
-  adapter:SequelizeAdapter(sequelize),
+  adapter,
   providers: [
     CredentialsProvider({
       credentials: {},
