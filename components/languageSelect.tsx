@@ -63,7 +63,7 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({ className }) => {
       value: 'cn',
       label: (
         <>
-          <Image src={cnFlag} width={40} alt="{t('chinese')}" />
+          <Image src={cnFlag} width={40} alt={t('chinese')} />
           {t('chinese')}
         </>
       ),
@@ -72,7 +72,7 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({ className }) => {
       value: 'it',
       label: (
         <>
-          <Image src={itFlag} width={40} alt="{t('italian')}" />
+          <Image src={itFlag} width={40} alt={t('italian')} />
           {t('italian')}
         </>
       ),
@@ -81,7 +81,7 @@ const LanguageSelect: React.FC<LanguageSelectProps> = ({ className }) => {
       value: 'en',
       label: (
         <>
-          <Image src={enFlag} width={40} alt="{t('english')}" />
+          <Image src={enFlag} width={40} alt={t('english')} />
           {t('english')}
         </>
       ),

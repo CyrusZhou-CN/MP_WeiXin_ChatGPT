@@ -27,6 +27,7 @@ switch (sysconfig.dbType) {
         }
       },
       ssl: true,
+      dialectModule: require('pg'),
       protocol: "postgres",
       host: sysconfig.dbHost,
       username: sysconfig.dbUserName,

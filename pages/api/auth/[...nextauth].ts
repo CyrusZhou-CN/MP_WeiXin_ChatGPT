@@ -1,11 +1,14 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
 import User from "db/models/user";
 import SystemLog from "components/systemLog";
 import { NextApiRequest, NextApiResponse } from "next";
+import SequelizeAdapter from "@next-auth/sequelize-adapter";
+import sequelize from 'db/sequelize';
 
-const options: AuthOptions = {
+const options: AuthOptions = {  
+  adapter:SequelizeAdapter(sequelize),
   providers: [
     CredentialsProvider({
       credentials: {},
@@ -56,8 +59,10 @@ const options: AuthOptions = {
     debug(code, metadata) {
       console.debug(code, metadata)
     }
+  }, 
+  session: {
+    strategy: "jwt"
   },
-  session: { strategy: "jwt" },
 };
 const nextAuth = (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options);
 export default nextAuth;

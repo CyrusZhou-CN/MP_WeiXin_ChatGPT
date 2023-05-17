@@ -33,12 +33,12 @@ const LoginPage = () => {
     event.preventDefault();
     try {
       const result = await signIn("credentials",{redirect: false, username, password });
-      console.error('result:', result);
       if (result?.error) {
         console.error('loginerror:', result.error);
         const errorMessage:any = result.error || 'Unknown error';
         setErrorMessage(t(errorMessage) as string);
       } else if (result) {
+        console.log('loginsuccess:', result);
         router.push("/admin/dashboard");
       } else {
         setErrorMessage(t("Invalid username or password") as string);

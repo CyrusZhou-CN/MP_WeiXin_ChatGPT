@@ -26,8 +26,8 @@
       }
     ],
     "types": [
-      "jest",
-      "sha1",
+      "@types/jest",
+      "@types/sha1",
       "react",
       "react-dom"
     ]
