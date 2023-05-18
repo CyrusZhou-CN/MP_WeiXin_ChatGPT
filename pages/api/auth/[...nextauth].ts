@@ -19,12 +19,12 @@ const options: AuthOptions = {
         if (!process.env.NEXTAUTH_URL && !process.env.VERCEL_URL) {
           console.error("NEXTAUTH_URL or VERCEL_URL is not set");
           throw new Error('NEXTAUTH_URL or VERCEL_URL is not set');
-        }
+        };
         if (!username || !password) {
           console.error('Missing username or password');
           SystemLog.Log('error', 'Missing username or password');
           throw new Error("Missing username or password");
-        }
+        };
         try {
           const user = await User.findOne({
             where: {
@@ -36,7 +36,7 @@ const options: AuthOptions = {
             console.error('Invalid username or password');
             SystemLog.Log('error', 'Invalid username or password');
             throw new Error("Invalid username or password");
-          }
+          };
           console.log(`Successfully logged in as ${username}`);
           SystemLog.Log('info', `Successfully logged in as ${username}`);
           return { id: user.id, name: user.name };
@@ -44,7 +44,7 @@ const options: AuthOptions = {
           console.error('authorize error:', error);
           SystemLog.Log('error', error.message);
           throw new Error(error.message);
-        }
+        };
       },
     }),
   ],
