@@ -1,25 +1,26 @@
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next'; // 引入 useTranslation hook
 import { Header } from 'components/header';
 import { Footer } from 'components/footer';
-import { signIn, useSession } from 'next-auth/react';
 import syncModels from "db/sync-models";
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
+import useUser from "lib/useUser";
+import fetchJson from 'lib/fetchJson';
+import { TFunction } from 'i18next';
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
-    locale = locale || 'cn';
-    await syncModels();
-    return {
-        props: {
-            ...await serverSideTranslations(locale, ['common', 'footer']),
-        },
-    };
+  locale = locale || 'cn';
+  await syncModels();
+  return {
+    props: {
+      locale,
+      ...await serverSideTranslations(locale, ['common', 'footer']),
+    },
+  };
 };
 
-const LoginPage = () => {
-  const router = useRouter();
+const LoginPage = ({locale}:any) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -28,23 +29,27 @@ const LoginPage = () => {
   const usernameLabel = t('Username');
   const passwordLabel = t('Password');
   const submitLabel = t('Submit');
-
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+  const { mutateUser } = useUser({
+    redirectTo: `/${locale}/admin/dashboard`,
+    redirectIfFound: true,
+  });  
+  const handleLogin = async (event: any) => {
     event.preventDefault();
+    const body = {
+      username,
+      password,
+    };
+
     try {
-      const result = await signIn("credentials",{redirect: false, username, password });
-      if (result?.error) {
-        console.error('loginerror:', result.error);
-        const errorMessage:any = result.error || 'Unknown error';
-        setErrorMessage(t(errorMessage) as string);
-      } else if (result) {
-        console.log('loginsuccess:', result);
-        router.push("/admin/dashboard");
-      } else {
-        setErrorMessage(t("Invalid username or password") as string);
-      }
+      mutateUser(
+        await fetchJson("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+      );
     } catch (error: any) {
-      setErrorMessage(t(error || 'Unknown error') as string);
+      setErrorMessage(t(error.data.message));
     }
   };
   return (
@@ -181,3 +186,4 @@ const LoginPage = () => {
   )
 }
 export default LoginPage;
+

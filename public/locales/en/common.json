@@ -16,5 +16,6 @@
   "Unknown error": "Unknown error",
   "Internal server error": "Internal server error",
   "Incorrect username or password": "Incorrect username or password",
-  "Login successful": "Login successful"
+  "Login successful": "Login successful",
+  "Logging Out": "Logging Out..."
 }

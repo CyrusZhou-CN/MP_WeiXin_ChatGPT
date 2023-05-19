@@ -1,13 +1,13 @@
 import '../styles/global.css';
 import { AppProps } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
-import { SessionProvider } from "next-auth/react"
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import i18n from '../components/i18n' // 导入你的 i18n 配置
 import { initReactI18next } from 'react-i18next';
-import { Session } from 'next-auth';
+import { SWRConfig } from "swr";
+import fetchJson from "lib/fetchJson";
+import { useEffect } from 'react';
 
 // 初始化 react-i18next
 i18n.use(initReactI18next).init({
@@ -15,7 +15,7 @@ i18n.use(initReactI18next).init({
   lng: 'cn',
   debug: process.env.NODE_ENV === 'development'
 })
-const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps<{ session: Session }>) => {
+const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
   const { i18n } = useTranslation();
   const router = useRouter();
   useEffect(() => {
@@ -23,7 +23,7 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
     if (storedLang) {
       router.push(router.asPath, router.asPath, { locale: storedLang });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -39,9 +39,16 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }: AppProps<{ s
     };
   }, [i18n, router]);
   return (
-    <SessionProvider session={session}>
+    <SWRConfig
+      value={{
+        fetcher: fetchJson,
+        onError: (err: any) => {
+          console.error(err);
+        },
+      }}
+    >
       <Component {...pageProps} />
-    </SessionProvider>
+    </SWRConfig>
   )
 }
 

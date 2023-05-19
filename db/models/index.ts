@@ -1,6 +1,6 @@
-import sequelize  from '../sequelize';
+import sequelize from '../sequelize';
 import SystemLogModel from './system_log';
 import ReplyCacheModel from './reply_cache';
-import UserModel from './user';
+import User from './user';
 
-export { sequelize, SystemLogModel, ReplyCacheModel , UserModel};
+export { sequelize, SystemLogModel, ReplyCacheModel, User };

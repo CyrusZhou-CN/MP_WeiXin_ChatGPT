@@ -16,5 +16,6 @@
     "Unknown error": "未知错误",
     "Internal server error": "内部服务器错误",
     "Invalid username or password": "用户名或密码错误",
-    "Login successful": "登录成功"
+    "Login successful": "登录成功",
+    "Logging Out": "正在退出登录..."
 }

@@ -1,5 +1,3 @@
-import * as crypto from "crypto";
-import writeToFile from "../log";
 const blocksize = 32;
 /**
  * PKCS7Encoder class

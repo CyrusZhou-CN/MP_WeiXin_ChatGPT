@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import { UserModel } from "db/models";
+import { User } from "db/models";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Op } from "sequelize";
 
@@ -21,13 +21,13 @@ const users = async (req: NextApiRequest, res: NextApiResponse) => {
             } : {};
 
             try {
-                const data = await UserModel.findAll({
+                const data = await User.findAll({
                     where: where,
                     limit: Number(limit),
                     offset: Number(offset),
                     attributes: { exclude: ['password'] }
                 });
-                const total = await UserModel.count({ where });
+                const total = await User.count({ where });
                 res.json({ data, total });
             } catch (error) {
                 res.status(500).send(error);
@@ -42,7 +42,7 @@ const users = async (req: NextApiRequest, res: NextApiResponse) => {
                 res.status(500).json({ error: true, message: error.message });
                 return;
             }
-            UserModel.create(body)
+            User.create(body)
                 .then((user) => {
                     // 删除密码属性并返回响应
                     const userJSON = user.toJSON();
@@ -65,11 +65,11 @@ const users = async (req: NextApiRequest, res: NextApiResponse) => {
                     res.status(500).json({ error: true, message: error.message });
                     return;
                 }
-                UserModel.update({ password: hashPassword }, { where: { id: edit_userId }, })
+                User.update({ password: hashPassword }, { where: { id: edit_userId }, })
                     .then(() => res.json({ message: "Password updated" }))
                     .catch((err) => res.status(500).json({ error: true, message: err.errors[0].message }));
             } else {
-                UserModel.update(body, { where: { id } })
+                User.update(body, { where: { id } })
                     .then(() => res.json({ message: 'User updated' }))
                     .catch((err) => res.status(500).json({ error: true, message: err.errors[0].message }));
             }
@@ -77,7 +77,7 @@ const users = async (req: NextApiRequest, res: NextApiResponse) => {
         case 'DELETE':
             // 删除指定用户
             const { id: userId } = query;
-            UserModel.destroy({ where: { id: userId } })
+            User.destroy({ where: { id: userId } })
                 .then(() => res.json({ message: 'User deleted' }))
                 .catch((err) => res.status(500).json({ error: true, message: err.errors[0].message }));
             break;

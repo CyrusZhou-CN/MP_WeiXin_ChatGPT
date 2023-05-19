@@ -2,15 +2,13 @@
 import sequelize from './sequelize';
 import SystemLogModel from './models/system_log';
 import ReplyCacheModel from './models/reply_cache';
-import SequelizeAdapter from '@next-auth/sequelize-adapter';
-import User from './models/user';
 import { hash } from 'bcrypt';
-export const adapter =  SequelizeAdapter(sequelize);
+import User from './models/user';
+
 const syncModels = async (): Promise<void> => {
   await ReplyCacheModel.sync({ force: false });
   await SystemLogModel.sync({ force: false });
-  await User.sync({ force: false });
-  SequelizeAdapter(sequelize);
+  await SystemLogModel.sync({ force: false });
   await sequelize.sync({ force: false });
   // Create default admin user
   const adminUser = await User.findOne({ where: { username: 'admin' } });
