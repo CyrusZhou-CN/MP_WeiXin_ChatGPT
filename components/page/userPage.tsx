@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Table, Input, Modal, Form, message, Button, Space } from 'antd';
-import { UserModel } from '../../db/models';
+import { User } from '../../db/models';
 import { useTranslation } from 'next-i18next';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import UserForm from './userForm';
@@ -8,7 +8,7 @@ import UserPasswordForm from './userPasswordForm';
 const { confirm } = Modal;
 const UserPage = ({ }: any) => {
     const { t } = useTranslation('admin');
-    const [users, setUsers] = useState<UserModel[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -17,7 +17,7 @@ const UserPage = ({ }: any) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [visible, setVisible] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [user, setUser] = useState<UserModel>();
+    const [user, setUser] = useState<User>();
     const columns = [
         {
             title: t('image'),
@@ -57,7 +57,7 @@ const UserPage = ({ }: any) => {
         {
             title: '',
             key: 'action',
-            render: (text: string, record: UserModel) => (
+            render: (text: string, record: User) => (
                 <Space size="middle">
                     <Button type="primary" onClick={() => handleEdit(record)}>
                         {t('edit')}
@@ -78,7 +78,7 @@ const UserPage = ({ }: any) => {
         setPage(1);
     };
 
-    const handleCreate = async (user: UserModel) => {
+    const handleCreate = async (user: User) => {
         try {
             filterUsers();
         } catch (error: any) {
@@ -94,15 +94,15 @@ const UserPage = ({ }: any) => {
     const handleHideModal = () => {
         setVisible(false);
     };
-    const handleEdit = async (user: UserModel) => {
+    const handleEdit = async (user: User) => {
         setUser(user);
         setVisible(true);
     };
-    const handleUpdatePassword = async (user: UserModel) => {
+    const handleUpdatePassword = async (user: User) => {
         setUserId(user.id);
         setPasswordVisible(true);
     }
-    const onUpdate = async (id: string, values: UserModel) => {
+    const onUpdate = async (id: string, values: User) => {
         try {
             filterUsers();
         } catch (error: any) {
@@ -114,7 +114,7 @@ const UserPage = ({ }: any) => {
     const onUpdatePassword = async (id: string) => {
         setPasswordVisible(false);
     }
-    const handleDelete = (user: UserModel) => {
+    const handleDelete = (user: User) => {
         setConfirmLoading(true);
         confirm({
             title: t('confirmDelete'),

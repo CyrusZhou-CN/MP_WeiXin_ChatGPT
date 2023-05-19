@@ -8,6 +8,7 @@ import ReplyCachePage from '../../components/page/replyCachePage';
 import SystemLogPage from '../../components/page/systemLogPage';
 import UserPage from '../../components/page/userPage';
 import { GetStaticProps } from 'next';
+import useUser from 'lib/useUser';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -30,7 +31,7 @@ export default function ServerDashboardPage({ }: any) {
   const handleMenuClick = (key: Page) => {
     setCurrentPage(key);
   };
-
+  
   return (
     <>
       <Layout style={{ minHeight: '100vh' }}>

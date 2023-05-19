@@ -16,5 +16,6 @@
   "Unknown error": "Errore sconosciuto",  
   "Internal server error": "Errore interno del server",
   "Incorrect username or password": "Nome utente o password errati",
-  "Login successful": "Accesso effettuato con successo"
+  "Login successful": "Accesso effettuato con successo",
+  "Logging Out": "Disconnessione ..."
 }
