@@ -1,4 +1,4 @@
-import type { IronSessionOptions } from "iron-session";
+import { IronSessionOptions } from 'iron-session';
 
 export const sessionOptions: IronSessionOptions = {
   password: process.env.NEXTAUTH_SECRET as string,

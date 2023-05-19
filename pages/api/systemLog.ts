@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import { SystemLogModel } from "db/models";
+import { SystemLogModel } from "../../db/models";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Op } from "sequelize";
 

@@ -1,8 +1,8 @@
 import { hash } from "bcrypt";
-import { ReplyCacheModel } from "db/models";
+import { ReplyCacheModel } from "../../db/models";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Op } from "sequelize";
-import SystemLog from "components/systemLog";
+import SystemLog from "../../components/systemLog";
 
 const replyCache = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method, query, body } = req;

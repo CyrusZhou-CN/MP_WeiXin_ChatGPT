@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 import i18n from '../components/i18n' // 导入你的 i18n 配置
 import { initReactI18next } from 'react-i18next';
 import { SWRConfig } from "swr";
-import fetchJson from "lib/fetchJson";
+import fetchJson from "../lib/fetchJson";
 import { useEffect } from 'react';
 
 // 初始化 react-i18next

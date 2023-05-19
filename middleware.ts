@@ -1,7 +1,7 @@
 //middleware.ts
 
 import { getIronSession } from "iron-session/edge";
-import { sessionOptions } from "lib/session";
+import { sessionOptions } from "./lib/session";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
@@ -9,7 +9,6 @@ export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const locale = typeof localStorage !== 'undefined' ? localStorage.getItem('lang') : "cn";
   const res = NextResponse.next();
-  // If it's the root path, just render it
   if (path === "/") {
     return res;
   }

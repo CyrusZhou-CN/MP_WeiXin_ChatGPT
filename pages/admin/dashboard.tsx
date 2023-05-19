@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { Header } from 'components/header';
-import { Footer } from 'components/footer';
+import { Header } from '../../components/header';
+import { Footer } from '../../components/footer';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Layout, Menu } from 'antd';
 import ReplyCachePage from '../../components/page/replyCachePage';
 import SystemLogPage from '../../components/page/systemLogPage';
 import UserPage from '../../components/page/userPage';
 import { GetStaticProps } from 'next';
-import useUser from 'lib/useUser';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;

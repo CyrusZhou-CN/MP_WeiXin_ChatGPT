@@ -1,4 +1,3 @@
-import fs from "fs";
 import ReactMarkdown from "react-markdown"
 import markdownStyles from "../styles/markdown-styles.module.css";
 import Image from "next/image";
@@ -6,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import { GetStaticProps } from "next/types";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Layout from "../components/layout";
-import syncModels from "db/sync-models";
+import syncModels from "../db/sync-models";
 import weixinImage from "../public/images/weixin.jpg";
 import wechatDebugImage from "../public/images/wechat_debug.jpg";
 import nextImage from "../public/images/next.jpg";

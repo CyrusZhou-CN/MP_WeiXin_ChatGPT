@@ -1,14 +1,12 @@
 import Head from 'next/head'
 import type { FC } from 'react'
-import Image from "next/image";
-import { Avatar, Layout, Menu, MenuProps } from 'antd';
-import { UserOutlined, LogoutOutlined, GithubOutlined } from '@ant-design/icons';
+import { Layout, Menu, MenuProps } from 'antd';
+import { LogoutOutlined, GithubOutlined } from '@ant-design/icons';
 import LanguageSelect from './languageSelect';
 import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
-import useUser from 'lib/useUser';
+import useUser from '../lib/useUser';
 import { useRouter } from 'next/router';
-import fetchJson from 'lib/fetchJson';
+import fetchJson from '../lib/fetchJson';
 const { Header: AntdHeader } = Layout;
 
 type Props = {

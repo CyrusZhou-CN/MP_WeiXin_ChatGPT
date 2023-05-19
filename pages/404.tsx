@@ -2,7 +2,7 @@ import Layout from "../components/layout";
 import { useTranslation } from "next-i18next";
 import Link from 'next/link';
 
-import { getStaticProps } from 'components/i18nServerSideProps';
+import { getStaticProps } from '../components/i18nServerSideProps';
 import { useRouter } from "next/router";
 export { getStaticProps };
 export default function Custom404() {

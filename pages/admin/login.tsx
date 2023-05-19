@@ -1,14 +1,13 @@
-import { SetStateAction, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useTranslation } from 'next-i18next'; // 引入 useTranslation hook
-import { Header } from 'components/header';
-import { Footer } from 'components/footer';
-import syncModels from "db/sync-models";
+import { Header } from '../../components/header';
+import { Footer } from '../../components/footer';
+import syncModels from "../../db/sync-models";
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import useUser from "lib/useUser";
-import fetchJson from 'lib/fetchJson';
-import { TFunction } from 'i18next';
+import useUser from "../../lib/useUser";
+import fetchJson from '../../lib/fetchJson';
+
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   locale = locale || 'cn';
   await syncModels();

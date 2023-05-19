@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { Input, Table } from 'antd';
-import { SystemLogModel } from 'db/models';
+import { SystemLogModel } from '../../db/models';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function SystemLogPage({ }) {

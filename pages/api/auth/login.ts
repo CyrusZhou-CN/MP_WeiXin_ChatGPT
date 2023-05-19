@@ -1,7 +1,7 @@
 import { withIronSessionApiRoute } from "iron-session/next";
-import { sessionOptions } from "lib/session";
+import { sessionOptions } from "../../../lib/session";
 import { NextApiRequest, NextApiResponse } from "next";
-import { User } from "db/models";
+import { User } from "../../../db/models";
 import { compare } from "bcrypt";
 
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
