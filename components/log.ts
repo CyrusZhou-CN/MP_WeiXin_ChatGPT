@@ -1,14 +1,20 @@
 import fs from 'fs';
 import path from 'path';
+import sysconfig from './sysconfig';
 const maxFileSize = 1024 * 1024; // 1MB
 const logDirPath = path.join(process.cwd(), 'log');
 console.log(logDirPath);
-if (!fs.existsSync(logDirPath)) {
-  fs.mkdirSync(logDirPath);
+if (sysconfig.isVercel !== '1') {
+  if (!fs.existsSync(logDirPath)) {
+    fs.mkdirSync(logDirPath);
+  }
 }
-
 let logCounter = 0;
 const writeToFile = (type = 'log', content: unknown) => {
+  if (sysconfig.isVercel === '1') {
+    console.log('sequelize:', content);
+    return;
+  }
   if (process.env.NODE_ENV === 'test' || (process.env.IS_LOG && process.env.IS_LOG.toLowerCase() === 'true')) {
     const date = new Date();
     const dateString = `${type}: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;

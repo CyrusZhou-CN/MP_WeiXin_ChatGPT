@@ -6,8 +6,8 @@ import writeToFile from '../components/log';
 let sequelizeOptions: any = {
   dialect: sysconfig.dbType as Dialect,
   // 设置日志选项
-  logging: (msg:any) => {
-    writeToFile('sequelize', msg)
+  logging: (msg: any) => {
+    writeToFile('sequelize', msg);
   }
 };
 switch (sysconfig.dbType) {
