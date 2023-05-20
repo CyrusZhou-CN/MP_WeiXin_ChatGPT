@@ -15,16 +15,17 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
         username,
       },
     });
-
-    if (!user || !(await compare(password, user.password))) {
+    console.log('username:', username);
+    console.log('password:', password);
+    if (user && await compare(password, user.password)) {
       const sessionUser = { id: user?.id, name: user?.name, isLoggedIn: true, image: user?.image, };
       req.session.user = sessionUser;
       await req.session.save();
       res.json(sessionUser)
     } else {
-      res.status(200).json({ message: "Invalid username or password" })
+      res.status(403).json({ message: "Invalid username or password" })
     }
   } catch (error: any) {
-    res.status(200).json({ message: error.message })
+    res.status(500).json({ message: error.message })
   }
 }

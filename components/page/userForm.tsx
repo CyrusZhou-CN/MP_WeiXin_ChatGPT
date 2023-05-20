@@ -37,7 +37,7 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
         const ruserJson = await ruser.json();
         if (!ruserJson.error) {
           message.success(t('editSuccess'));
-          onUpdate(user.id, await ruser.json());
+          onUpdate(user.id, ruserJson);
         } else {
           message.error(`${t('editFailed')}:${t(ruserJson.message || 'Unknown error')}`);
           return;
@@ -54,7 +54,7 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
         const ruserJson = await ruser.json();
         if (!ruserJson.error) {
           message.success(t('createSuccess'));
-          console.log('ruser:', ruser);
+          console.log('ruser:', ruserJson);
           onCreate(ruserJson);
         } else {
           message.error(`${t('createFailed')}:${t(ruserJson.message || 'Unknown error')}`);
@@ -62,7 +62,8 @@ const UserForm: React.FC<UserFormProps> = ({ visible, user, onCreate, onUpdate, 
         }
       }
       form.resetFields();
-    } catch (error: any) {
+    } catch (error: any) {      
+      console.log('error:', error);
       message.error(`${t('createFailed')}: ${t(error || 'Unknown error')}`);
     } finally {
       setConfirmLoading(false);

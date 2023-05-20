@@ -3,10 +3,14 @@ import { ReplyCacheModel } from "../../db/models";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Op } from "sequelize";
 import SystemLog from "../../components/systemLog";
-
+import { withIronSessionApiRoute } from 'iron-session/next'
+import { sessionOptions } from '../../lib/session'
 const replyCache = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method, query, body } = req;
-
+    if (!req.session.user) {
+        res.status(401).json({error: true, message: "Unauthorized" });
+        return;
+    }
     switch (method) {
         case 'GET':
             // 获取所有用户数据或根据关键词搜索用户数据并进行分页
@@ -68,4 +72,4 @@ const replyCache = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 }
 
-export default replyCache
+export default withIronSessionApiRoute(replyCache, sessionOptions)

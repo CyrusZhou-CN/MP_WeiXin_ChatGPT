@@ -2,10 +2,14 @@ import { hash } from "bcrypt";
 import { SystemLogModel } from "../../db/models";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Op } from "sequelize";
-
+import { withIronSessionApiRoute } from 'iron-session/next'
+import { sessionOptions } from '../../lib/session'
 const systemLog = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method, query, body } = req;
-
+    if (!req.session.user) {
+        res.status(401).json({error: true, message: "Unauthorized" });
+        return;
+    }
     switch (method) {
         case 'GET':
             // 获取所有用户数据或根据关键词搜索用户数据并进行分页
@@ -56,4 +60,4 @@ const systemLog = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 }
 
-export default systemLog
+export default withIronSessionApiRoute(systemLog, sessionOptions)

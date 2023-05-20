@@ -2,10 +2,14 @@ import { hash } from "bcrypt";
 import { User } from "../../db/models";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Op } from "sequelize";
-
-const users = async (req: NextApiRequest, res: NextApiResponse) => {
+import { withIronSessionApiRoute } from 'iron-session/next'
+import { sessionOptions } from '../../lib/session'
+const userRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     const { method, query, body } = req;
-
+    if (!req.session.user) {
+        res.status(401).json({ error: true, message: "Unauthorized" });
+        return;
+    }
     switch (method) {
         case 'GET':
             // 获取所有用户数据或根据关键词搜索用户数据并进行分页
@@ -42,44 +46,54 @@ const users = async (req: NextApiRequest, res: NextApiResponse) => {
                 res.status(500).json({ error: true, message: error.message });
                 return;
             }
-            User.create(body)
-                .then((user) => {
-                    // 删除密码属性并返回响应
-                    const userJSON = user.toJSON();
-                    delete userJSON.password;
-                    res.json({ message: 'User create', data: userJSON });
-                })
-                .catch((err) => res.status(500).json({ error: true, message: err.errors[0].message }));
+            try {
+                const user = await User.create(body);
+                // 删除密码属性并返回响应
+                const userJSON = user.toJSON();
+                delete userJSON.password;
+                res.json({ message: 'User create', data: userJSON });
+            } catch (error: any) {
+                res.status(500).json({ error: true, message: error.errors[0].message })
+            }
             break;
         case 'PUT':
             // 更新指定用户
-            const { id, PASSWORD } = query;
-            if (PASSWORD) {
-                // 修改指定用户密码
-                const { id: edit_userId } = query;
-                const { password: edit_password } = body;
-                let hashPassword = '';
-                try {
-                    hashPassword = await hash(edit_password, 10);
-                } catch (error: any) {
-                    res.status(500).json({ error: true, message: error.message });
-                    return;
+            try {
+                const { id, PASSWORD } = query;
+                if (PASSWORD) {
+                    // 修改指定用户密码
+                    const { id: edit_userId } = query;
+                    const { password: edit_password } = body;
+                    let hashPassword = '';
+                    try {
+                        hashPassword = await hash(edit_password, 10);
+                    } catch (error: any) {
+                        res.status(500).json({ error: true, message: error.message });
+                        return;
+                    }
+                    await User.update({ password: hashPassword }, { where: { id: edit_userId }, })
+                    console.log('edit_userId:', edit_userId);
+                    console.log('hashPassword:', hashPassword);
+                    res.json({ message: "Password updated" });
+                } else {
+                    await User.update(body, { where: { id } })
+                    res.json({ message: 'User updated' });
                 }
-                User.update({ password: hashPassword }, { where: { id: edit_userId }, })
-                    .then(() => res.json({ message: "Password updated" }))
-                    .catch((err) => res.status(500).json({ error: true, message: err.errors[0].message }));
-            } else {
-                User.update(body, { where: { id } })
-                    .then(() => res.json({ message: 'User updated' }))
-                    .catch((err) => res.status(500).json({ error: true, message: err.errors[0].message }));
+
+            } catch (error: any) {
+                console.log('PUT error:', error);
+                res.status(500).json({ error: true, message: error.errors[0].message })
             }
             break;
         case 'DELETE':
             // 删除指定用户
             const { id: userId } = query;
-            User.destroy({ where: { id: userId } })
-                .then(() => res.json({ message: 'User deleted' }))
-                .catch((err) => res.status(500).json({ error: true, message: err.errors[0].message }));
+            try {
+                await User.destroy({ where: { id: userId } });
+                res.json({ message: 'User deleted' });
+            } catch (error: any) {
+                res.status(500).json({ error: true, message: error.errors[0].message });
+            }
             break;
         default:
             res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
@@ -87,4 +101,4 @@ const users = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 }
 
-export default users;
+export default withIronSessionApiRoute(userRoute, sessionOptions)

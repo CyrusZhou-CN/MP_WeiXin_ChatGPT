@@ -36,7 +36,7 @@ export const Header: FC<Props> = (props) => {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <h2>{heading}</h2>
           </div>
-          <Menu style={{ width: '320px', display: 'flex', alignItems: 'center' }}
+          <Menu style={{ width: '380px', display: 'flex', alignItems: 'center' }}
             theme="dark" mode="horizontal" defaultSelectedKeys={[]}>
             <Menu.Item key="1"><LanguageSelect /></Menu.Item>
             {user && user.isLoggedIn && (
