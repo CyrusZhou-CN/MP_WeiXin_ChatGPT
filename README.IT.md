@@ -32,8 +32,7 @@ Questo è un programma basato su Next.js che collega l'account pubblico WeChat a
    OPENAI_MODEL=gpt-3.5-turbo
    OPENAI_TIMEOUT=60000
    IS_AUTHENTICATED=false
-   NEXTAUTH_SECRET=(Puoi usare il comando openssl rand -base64 32 per generare un segreto)
-   NEXTAUTH_URL=http://localhost:3000/ (necessita di essere cambiato con l'indirizzo del sito web effettivo dopo la pubblicazione)
+   SECRET_COOKIE_PASSWORD=(Puoi usare il comando openssl rand -hex 16 per generare un segreto)
    MYSQL_HOST=localhost
    MYSQL_PORT=6306
    MYSQL_USER=weixin
