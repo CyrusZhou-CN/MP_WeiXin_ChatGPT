@@ -5,7 +5,7 @@ declare global {
     image: string | undefined | null;
   }
 }
-import IronSessionData, { IronSessionOptions } from 'iron-session';
+import "iron-session";
 declare module "iron-session" {
   interface IronSessionData {
     user?: SessionUser;

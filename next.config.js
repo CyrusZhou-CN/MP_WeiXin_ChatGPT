@@ -4,14 +4,14 @@ require('dotenv').config();
 const { loadCustomBuildParams } = require('./next-utils.config')
 const { esmExternals = false, tsconfigPath } = loadCustomBuildParams()
 const { i18n } = require('./next-i18next.config');
-const nextauthConfig = require('./nextauth.config.js');
+// const nextauthConfig = require('./nextauth.config.js');
 
 /**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
   i18n,
-  nextauthConfig,
+  // nextauthConfig,
   experimental: {
     esmExternals,
   },
