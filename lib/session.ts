@@ -1,7 +1,7 @@
 import { IronSessionOptions } from 'iron-session';
 
 export const sessionOptions: IronSessionOptions = {
-  password: process.env.NEXTAUTH_SECRET as string,
+  password: process.env.SECRET_COOKIE_PASSWORD || "123456" as string,
   cookieName: "mp-weixin-chatgpt-iron-session",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",

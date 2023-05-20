@@ -12,6 +12,7 @@ export const middleware = async (req: NextRequest) => {
   if (path === "/") {
     return res;
   }
+  console.log('sessionOptions:',sessionOptions);
   const session = await getIronSession(req, res, sessionOptions);
   const { user } = session;
   console.log('path:',path);

@@ -31,8 +31,7 @@
    OPENAI_MODEL=gpt-3.5-turbo
    OPENAI_TIMEOUT=60000
    IS_AUTHENTICATED=false
-   NEXTAUTH_SECRET=(可以用命令生成openssl rand -base64 32)
-   NEXTAUTH_URL=http://localhost:3000/(发布后需要改成实际的网站地址)
+   SECRET_COOKIE_PASSWORD=(可以用命令生成openssl rand -hex 16)
    MYSQL_HOST=localhost
    MYSQL_PORT=6306
    MYSQL_USER=weixin
