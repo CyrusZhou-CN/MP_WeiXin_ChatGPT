@@ -186,3 +186,13 @@ DB_NAME=POSTGRES_DATABASE
 认证公众号内容主动发送未测试
 
 安全模式加密回复未解决，目前只支持 兼容模式 、 明文模式
+
+# Node 版本问题
+使用 Node 16.16.0 版本开发
+node -v 查看版本
+## windows版本直接到官网下载
+## ubuntu 用下面的命令更新版本
+```
+npm install -g n
+n 16.16.0
+```
