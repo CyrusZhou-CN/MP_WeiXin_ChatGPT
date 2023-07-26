@@ -116,7 +116,6 @@ Sono state create due tabelle nel database: `system_log` e `reply_cache`.
 
 Nell'applicazione, utilizziamo il modulo `sequelize` per gestire la cache e salvarla nella tabella `reply_cache`.
 
-Il file del database si trova in db \mysql_init.sql
 
 ## Compilazione e rilascio
 1. Nella directory principale del progetto, esegui il seguente comando per compilare l'applicazione.

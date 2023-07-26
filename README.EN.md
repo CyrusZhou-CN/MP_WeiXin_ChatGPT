@@ -113,8 +113,6 @@ Two tables are created in the database: `system_log` and `reply_cache`.
 ```
 In the application, we use the `sequelize` module to operate the cache and save the cache to the `reply_cache` table.
 
-The database file is located at db\mysql_init.sql
-
 ## Compilation and Release
 1. Execute the following command in the root directory of the project to pack the application.
 
